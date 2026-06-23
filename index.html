@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Pablo Giraldo — Entrenador Personalizado y Atleta MMA en Bucaramanga. MMA, Jiu Jitsu, Muay Thai, Boxeo, Wrestling, Grappling." />
+  <title>Pablo Giraldo · Entrenador MMA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0a0a0a;
+      --bg-2:      #111111;
+      --bg-3:      #1a1a1a;
+      --border:    #2a2a2a;
+      --red:       #8b1a1a;
+      --red-light: #b02020;
+      --white:     #f0f0f0;
+      --gray:      #888888;
+      --font-title: 'Oswald', sans-serif;
+      --font-body:  'Inter', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    img { display: block; max-width: 100%; }
+
+    /* ============================================================
+       UTILIDADES
+    ============================================================ */
+    .container {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .section {
+      padding: 72px 0;
+    }
+
+    .section-label {
+      font-family: var(--font-title);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--red-light);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: var(--font-title);
+      font-size: clamp(28px, 6vw, 40px);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--white);
+      margin-bottom: 40px;
+      line-height: 1.1;
+    }
+
+    /* ============================================================
+       BOTONES
+    ============================================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 24px;
+      border-radius: 3px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      border: none;
+      text-decoration: none;
+    }
+
+    .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+
+    .btn-whatsapp {
+      background: #25d366;
+      color: #000;
+    }
+
+    .btn-instagram {
+      background: transparent;
+      color: var(--white);
+      border: 1.5px solid #555;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      border: 1.5px solid var(--border);
+    }
+
+    .btn-red {
+      background: var(--red);
+      color: var(--white);
+    }
+
+    /* ============================================================
+       HERO
+    ============================================================ */
+    #hero {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      position: relative;
+      overflow: hidden;
+      padding-bottom: 56px;
+    }
+
+    /* Foto placeholder */
+    .hero-photo {
+      position: absolute;
+      inset: 0;
+      background: #141414;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .hero-photo-icon {
+      width: 64px;
+      height: 64px;
+      opacity: 0.2;
+    }
+
+    .hero-photo-text {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: #555;
+      letter-spacing: 1px;
+    }
+
+    /* Gradiente overlay para legibilidad del texto */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        transparent 30%,
+        rgba(0, 0, 0, 0.5) 60%,
+        rgba(0, 0, 0, 0.92) 100%
+      );
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      width: 100%;
+      padding: 0 20px;
+    }
+
+    .hero-name {
+      font-family: var(--font-title);
+      font-size: clamp(44px, 13vw, 90px);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      line-height: 1;
+      color: var(--white);
+    }
+
+    .hero-tagline {
+      font-family: var(--font-body);
+      font-size: clamp(13px, 3.5vw, 17px);
+      color: #aaa;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin: 14px 0 32px;
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    /* Franja roja decorativa en top */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--red);
+      z-index: 3;
+    }
+
+    /* ============================================================
+       DISCIPLINAS
+    ============================================================ */
+    #disciplinas {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .disciplines-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .discipline-card {
+      background: var(--bg-3);
+      padding: 28px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      transition: background 0.2s;
+    }
+
+    .discipline-card:hover {
+      background: #202020;
+    }
+
+    .discipline-icon {
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .discipline-name {
+      font-family: var(--font-title);
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--white);
+      text-align: center;
+    }
+
+    /* ============================================================
+       SOBRE MÍ
+    ============================================================ */
+    #sobre {
+      background: var(--bg);
+    }
+
+    .sobre-text {
+      font-size: 17px;
+      color: #ccc;
+      line-height: 1.8;
+      max-width: 640px;
+    }
+
+    .sobre-text p + p {
+      margin-top: 16px;
+    }
+
+    .sobre-link {
+      display: inline-block;
+      margin-top: 24px;
+      color: var(--red-light);
+      font-weight: 600;
+      font-size: 15px;
+      border-bottom: 1px solid var(--red);
+      padding-bottom: 2px;
+      transition: color 0.2s;
+    }
+
+    .sobre-link:hover { color: var(--white); }
+
+    /* ============================================================
+       PALMARÉS
+    ============================================================ */
+    #palmares {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .achievements-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .achievement-item {
+      background: var(--bg-3);
+      border-left: 3px solid var(--red);
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      transition: background 0.2s;
+    }
+
+    .achievement-item:first-child { border-radius: 4px 4px 0 0; }
+    .achievement-item:last-child  { border-radius: 0 0 4px 4px; }
+
+    .achievement-item:hover { background: #202020; }
+
+    .achievement-rank {
+      font-family: var(--font-title);
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--red-light);
+      min-width: 56px;
+      line-height: 1;
+    }
+
+    .achievement-info {}
+
+    .achievement-title {
+      font-family: var(--font-title);
+      font-size: 18px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--white);
+    }
+
+    .achievement-detail {
+      font-size: 13px;
+      color: var(--gray);
+      margin-top: 3px;
+    }
+
+    /* ============================================================
+       ENTRENAMIENTOS
+    ============================================================ */
+    #entrenamientos {
+      background: var(--bg);
+    }
+
+    .plans-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 600px) {
+      .plans-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .plan-card {
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      transition: border-color 0.2s;
+    }
+
+    .plan-card:hover { border-color: var(--red); }
+
+    .plan-card.featured {
+      border-color: var(--red);
+    }
+
+    .plan-badge {
+      display: inline-block;
+      background: var(--red);
+      color: var(--white);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 2px;
+      margin-bottom: -8px;
+    }
+
+    .plan-name {
+      font-family: var(--font-title);
+      font-size: 24px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+
+    .plan-desc {
+      font-size: 14px;
+      color: var(--gray);
+      line-height: 1.6;
+    }
+
+    .plan-cta {
+      margin-top: auto;
+    }
+
+    .btn-wa-plan {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 13px 16px;
+      background: transparent;
+      border: 1.5px solid #25d366;
+      color: #25d366;
+      border-radius: 3px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.2s, color 0.2s;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .btn-wa-plan:hover {
+      background: #25d366;
+      color: #000;
+    }
+
+    /* ============================================================
+       CONTACTO / CTA FINAL
+    ============================================================ */
+    #contacto {
+      background: #0d0d0d;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 80px 20px;
+    }
+
+    .cta-headline {
+      font-family: var(--font-title);
+      font-size: clamp(30px, 8vw, 54px);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+
+    .cta-sub {
+      font-size: 16px;
+      color: var(--gray);
+      margin-bottom: 36px;
+    }
+
+    .cta-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .cta-instagram {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #aaa;
+      font-size: 15px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .cta-instagram:hover { color: var(--white); }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 28px 20px;
+      text-align: center;
+    }
+
+    .footer-text {
+      font-size: 13px;
+      color: #555;
+    }
+
+    .footer-text a {
+      color: #666;
+      border-bottom: 1px solid #333;
+      transition: color 0.2s;
+    }
+
+    .footer-text a:hover { color: var(--white); }
+
+    /* ============================================================
+       SVG ICONS (inline, no dependencias)
+    ============================================================ */
+    .icon-wa {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .icon-ig {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (min-width: 480px) {
+      .disciplines-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      }
+    }
+
+    @media (min-width: 768px) {
+      .achievement-item {
+        padding: 28px 36px;
+      }
+
+      .sobre-text {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================================================
+       HERO
+  ============================================================ -->
+  <section id="hero">
+
+    <!-- Foto placeholder — reemplazar con <img> cuando tengas la foto -->
+    <div class="hero-photo">
+      <svg class="hero-photo-icon" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.5">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+      <span class="hero-photo-text">Tu foto aquí</span>
+    </div>
+
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+      <h1 class="hero-name">Pablo Giraldo</h1>
+      <p class="hero-tagline">Entrenador Personalizado · Atleta MMA</p>
+      <div class="hero-cta">
+        <a class="btn btn-whatsapp"
+           href="https://wa.me/573232037744?text=Hola%20Pablo%2C%20quiero%20información%20sobre%20entrenamientos"
+           target="_blank" rel="noopener">
+          <!-- WhatsApp icon -->
+          <svg class="icon-wa" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+            <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.528 5.845L.057 23.854l6.18-1.621A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.88 0-3.65-.49-5.189-1.345l-.372-.22-3.671.963.98-3.584-.243-.388A9.93 9.93 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+          </svg>
+          WhatsApp
+        </a>
+        <a class="btn btn-instagram"
+           href="https://instagram.com/pablogiraldomma"
+           target="_blank" rel="noopener">
+          <!-- Instagram icon -->
+          <svg class="icon-ig" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+          </svg>
+          Instagram
+        </a>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ============================================================
+       DISCIPLINAS
+  ============================================================ -->
+  <section id="disciplinas" class="section">
+    <div class="container">
+      <p class="section-label">Especialidades</p>
+      <h2 class="section-title">Disciplinas</h2>
+
+      <div class="disciplines-grid">
+
+        <div class="discipline-card">
+          <span class="discipline-icon">🥊</span>
+          <span class="discipline-name">MMA</span>
+        </div>
+
+        <div class="discipline-card">
+          <span class="discipline-icon">🥋</span>
+          <span class="discipline-name">Jiu Jitsu</span>
+        </div>
+
+        <div class="discipline-card">
+          <span class="discipline-icon">🦵</span>
+          <span class="discipline-name">Muay Thai / Kickboxing</span>
+        </div>
+
+        <div class="discipline-card">
+          <span class="discipline-icon">🥊</span>
+          <span class="discipline-name">Boxeo</span>
+        </div>
+
+        <div class="discipline-card">
+          <span class="discipline-icon">🤼</span>
+          <span class="discipline-name">Wrestling</span>
+        </div>
+
+        <div class="discipline-card">
+          <span class="discipline-icon">🤸</span>
+          <span class="discipline-name">Grappling</span>
+        </div>
+
+        <div class="discipline-card">
+          <span class="discipline-icon">💪</span>
+          <span class="discipline-name">Acondicionamiento Físico</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SOBRE MÍ
+  ============================================================ -->
+  <section id="sobre" class="section">
+    <div class="container">
+      <p class="section-label">Quién soy</p>
+      <h2 class="section-title">Sobre mí</h2>
+
+      <div class="sobre-text">
+        <p>
+          Soy atleta de MMA con más de 5 años de experiencia, formado en
+          <strong>International Fight MMA</strong> — academia de artes marciales mixtas
+          con sede en Bucaramanga, Colombia.
+        </p>
+        <p>
+          Imparto clases en la academia y ofrezco programas de entrenamiento
+          personalizado para todos los niveles: desde personas que quieren
+          iniciarse en el combate hasta competidores que buscan un nivel técnico
+          más alto.
+        </p>
+        <p>
+          Mi enfoque combina técnica de combate, preparación física y mentalidad
+          competitiva — adaptado a los objetivos de cada persona.
+        </p>
+      </div>
+
+      <a class="sobre-link"
+         href="https://internationalfightmma.github.io/#peleadores"
+         target="_blank" rel="noopener">
+        Ver mi perfil en International Fight MMA →
+      </a>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       PALMARÉS / LOGROS
+  ============================================================ -->
+  <section id="palmares" class="section">
+    <div class="container">
+      <p class="section-label">Competencia</p>
+      <h2 class="section-title">Palmarés</h2>
+
+      <div class="achievements-list">
+
+        <div class="achievement-item">
+          <div class="achievement-rank">#3</div>
+          <div class="achievement-info">
+            <div class="achievement-title">Mundial OCAMM / GAMMA World Championship 2025</div>
+            <div class="achievement-detail">Brasil · 2025</div>
+          </div>
+        </div>
+
+        <div class="achievement-item">
+          <div class="achievement-rank">
+            <!-- Ícono de participación en lugar de número -->
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--red-light);">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+          </div>
+          <div class="achievement-info">
+            <div class="achievement-title">Nacional OCAMM 2025</div>
+            <div class="achievement-detail">Participación Nacional · Colombia · 2025</div>
+          </div>
+        </div>
+
+        <div class="achievement-item">
+          <div class="achievement-rank">#3</div>
+          <div class="achievement-info">
+            <div class="achievement-title">Rionegro Open 2023</div>
+            <div class="achievement-detail">Colombia · 2023</div>
+          </div>
+        </div>
+
+        <div class="achievement-item">
+          <div class="achievement-rank">#2</div>
+          <div class="achievement-info">
+            <div class="achievement-title">Nova Razza &amp; Grappling</div>
+            <div class="achievement-detail">Colombia</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       ENTRENAMIENTOS
+  ============================================================ -->
+  <section id="entrenamientos" class="section">
+    <div class="container">
+      <p class="section-label">Programas</p>
+      <h2 class="section-title">Entrenamientos</h2>
+
+      <div class="plans-grid">
+
+        <!-- Plan 10 clases -->
+        <div class="plan-card">
+          <div>
+            <div class="plan-name">Plan 10 Clases</div>
+            <p class="plan-desc">
+              Paquete de 10 sesiones personalizadas. Ideal para establecer
+              una rutina y trabajar fundamentos técnicos a tu ritmo.
+            </p>
+          </div>
+          <div class="plan-cta">
+            <a class="btn-wa-plan"
+               href="https://wa.me/573232037744?text=Hola%20Pablo%2C%20quiero%20información%20sobre%20entrenamientos"
+               target="_blank" rel="noopener">
+              <svg class="icon-wa" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.528 5.845L.057 23.854l6.18-1.621A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.88 0-3.65-.49-5.189-1.345l-.372-.22-3.671.963.98-3.584-.243-.388A9.93 9.93 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+              </svg>
+              Consultar por WhatsApp
+            </a>
+          </div>
+        </div>
+
+        <!-- Plan 15 clases (destacado) -->
+        <div class="plan-card featured">
+          <div>
+            <span class="plan-badge">Más popular</span>
+            <div class="plan-name" style="margin-top: 12px;">Plan 15 Clases</div>
+            <p class="plan-desc">
+              15 sesiones para un progreso más sólido. Más continuidad,
+              mejores resultados. Recomendado para quienes buscan
+              resultados concretos.
+            </p>
+          </div>
+          <div class="plan-cta">
+            <a class="btn-wa-plan"
+               href="https://wa.me/573232037744?text=Hola%20Pablo%2C%20quiero%20información%20sobre%20entrenamientos"
+               target="_blank" rel="noopener">
+              <svg class="icon-wa" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.528 5.845L.057 23.854l6.18-1.621A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.88 0-3.65-.49-5.189-1.345l-.372-.22-3.671.963.98-3.584-.243-.388A9.93 9.93 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+              </svg>
+              Consultar por WhatsApp
+            </a>
+          </div>
+        </div>
+
+        <!-- Clase individual -->
+        <div class="plan-card">
+          <div>
+            <div class="plan-name">Clase Individual</div>
+            <p class="plan-desc">
+              Una sola sesión para probar la metodología, trabajar un
+              aspecto específico o prepararte para una competencia puntual.
+            </p>
+          </div>
+          <div class="plan-cta">
+            <a class="btn-wa-plan"
+               href="https://wa.me/573232037744?text=Hola%20Pablo%2C%20quiero%20información%20sobre%20entrenamientos"
+               target="_blank" rel="noopener">
+              <svg class="icon-wa" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.528 5.845L.057 23.854l6.18-1.621A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.88 0-3.65-.49-5.189-1.345l-.372-.22-3.671.963.98-3.584-.243-.388A9.93 9.93 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+              </svg>
+              Consultar por WhatsApp
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       CONTACTO / CTA FINAL
+  ============================================================ -->
+  <section id="contacto">
+    <div class="container" style="text-align: center; padding: 80px 20px;">
+
+      <p class="section-label" style="justify-content: center; display: flex;">Empecemos</p>
+      <h2 class="cta-headline">¿Listo para entrenar?</h2>
+      <p class="cta-sub">Escríbeme y coordinamos tu primera sesión.</p>
+
+      <div class="cta-actions">
+        <a class="btn btn-whatsapp"
+           href="https://wa.me/573232037744?text=Hola%20Pablo%2C%20quiero%20información%20sobre%20entrenamientos"
+           target="_blank" rel="noopener"
+           style="font-size: 16px; padding: 16px 32px;">
+          <svg class="icon-wa" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.528 5.845L.057 23.854l6.18-1.621A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.88 0-3.65-.49-5.189-1.345l-.372-.22-3.671.963.98-3.584-.243-.388A9.93 9.93 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+          </svg>
+          Escribir por WhatsApp
+        </a>
+
+        <a class="cta-instagram"
+           href="https://instagram.com/pablogiraldomma"
+           target="_blank" rel="noopener">
+          <svg class="icon-ig" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+          </svg>
+          @pablogiraldomma
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer>
+    <p class="footer-text">
+      © 2025 Pablo Giraldo · Bucaramanga, Colombia ·
+      Miembro de <a href="https://internationalfightmma.github.io" target="_blank" rel="noopener">International Fight MMA</a>
+    </p>
+  </footer>
+
+</body>
+</html>
