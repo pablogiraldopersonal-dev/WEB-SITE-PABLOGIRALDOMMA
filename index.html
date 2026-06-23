@@ -39,12 +39,11 @@
       --white:  #111111;
       --gray:   #555555;
     }
-    body.light-mode #contacto        { background: #ddd; }
-    body.light-mode .hero-tagline    { color: #333; }
-    body.light-mode .cta-instagram   { color: #444; }
-    body.light-mode .footer-text     { color: #666; }
-    body.light-mode .footer-text a   { color: #555; border-color: #bbb; }
-    body.light-mode .sobre-text      { color: #333; }
+    body.light-mode #contacto      { background: #ddd; }
+    body.light-mode .cta-instagram { color: #444; }
+    body.light-mode .footer-text   { color: #666; }
+    body.light-mode .footer-text a { color: #555; border-color: #bbb; }
+    body.light-mode .sobre-text    { color: #333; }
 
     /* Botón toggle */
     #theme-toggle {
@@ -84,7 +83,6 @@
     }
 
     a { color: inherit; text-decoration: none; }
-
     img { display: block; max-width: 100%; }
 
     /* ============================================================
@@ -97,9 +95,7 @@
       padding: 0 20px;
     }
 
-    .section {
-      padding: 72px 0;
-    }
+    .section { padding: 72px 0; }
 
     .section-label {
       font-family: var(--font-title);
@@ -148,16 +144,11 @@
       color: #000;
     }
 
+    /* Instagram: fondo blanco, texto negro, visible igual que WA */
     .btn-instagram {
-      background: transparent;
-      color: var(--white);
-      border: 1.5px solid #555;
-    }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--white);
-      border: 1.5px solid var(--border);
+      background: #fff;
+      color: #000;
+      border: 1.5px solid #fff;
     }
 
     .btn-red {
@@ -179,32 +170,6 @@
       padding-bottom: 56px;
     }
 
-    /* Foto placeholder */
-    .hero-photo {
-      position: absolute;
-      inset: 0;
-      background: #141414;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .hero-photo-icon {
-      width: 64px;
-      height: 64px;
-      opacity: 0.2;
-    }
-
-    .hero-photo-text {
-      font-family: var(--font-body);
-      font-size: 13px;
-      color: #555;
-      letter-spacing: 1px;
-    }
-
-    /* Gradiente overlay para legibilidad del texto */
     .hero-overlay {
       position: absolute;
       inset: 0;
@@ -238,8 +203,9 @@
     .hero-tagline {
       font-family: var(--font-body);
       font-size: clamp(13px, 3.5vw, 17px);
+      font-weight: 600;
       color: #fff;
-      text-shadow: 2px 2px 8px rgba(0,0,0,0.9);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.9);
       letter-spacing: 2px;
       text-transform: uppercase;
       margin: 14px 0 32px;
@@ -252,13 +218,10 @@
       justify-content: center;
     }
 
-    /* Franja roja decorativa en top */
     .hero::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       height: 3px;
       background: var(--red);
       z-index: 3;
@@ -277,37 +240,29 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      overflow: hidden;
+      gap: 8px;
     }
 
     .discipline-card {
       background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
       padding: 28px 16px;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 12px;
-      transition: background 0.2s;
-      flex: 0 0 calc(25% - 1px);
-      min-width: 120px;
-    }
-
-    @media (max-width: 480px) {
-      .discipline-card { flex: 0 0 calc(50% - 1px); }
+      transition: background 0.2s, border-color 0.2s;
+      flex: 0 0 calc(25% - 8px);
+      min-width: 110px;
     }
 
     .discipline-card:hover {
       background: #202020;
+      border-color: var(--red);
     }
 
-    .discipline-icon {
-      font-size: 28px;
-      line-height: 1;
-    }
+    .discipline-icon { font-size: 28px; line-height: 1; }
 
     .discipline-name {
       font-family: var(--font-title);
@@ -319,23 +274,53 @@
       text-align: center;
     }
 
-    /* ============================================================
-       SOBRE MÍ
-    ============================================================ */
-    #sobre {
-      background: var(--bg);
+    @media (max-width: 600px) {
+      .discipline-card { flex: 0 0 calc(50% - 8px); }
     }
+
+    /* ============================================================
+       SOBRE MÍ — layout dos columnas
+    ============================================================ */
+    #sobre { background: var(--bg); }
+
+    .sobre-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    @media (max-width: 700px) {
+      .sobre-layout { grid-template-columns: 1fr; }
+    }
+
+    /* Carrusel automático izquierda */
+    .sobre-carousel {
+      position: relative;
+      height: 420px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .sobre-carousel img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.9s ease;
+    }
+
+    .sobre-carousel img.active { opacity: 1; }
 
     .sobre-text {
       font-size: 17px;
       color: #ccc;
       line-height: 1.8;
-      max-width: 640px;
     }
 
-    .sobre-text p + p {
-      margin-top: 16px;
-    }
+    .sobre-text p + p { margin-top: 16px; }
 
     .sobre-link {
       display: inline-block;
@@ -350,8 +335,12 @@
 
     .sobre-link:hover { color: var(--white); }
 
+    @media (min-width: 768px) {
+      .sobre-text { font-size: 18px; }
+    }
+
     /* ============================================================
-       PALMARÉS
+       LOGROS
     ============================================================ */
     #palmares {
       background: var(--bg-2);
@@ -377,7 +366,6 @@
 
     .achievement-item:first-child { border-radius: 4px 4px 0 0; }
     .achievement-item:last-child  { border-radius: 0 0 4px 4px; }
-
     .achievement-item:hover { background: #202020; }
 
     .achievement-rank {
@@ -388,8 +376,6 @@
       min-width: 56px;
       line-height: 1;
     }
-
-    .achievement-info {}
 
     .achievement-title {
       font-family: var(--font-title);
@@ -406,23 +392,150 @@
       margin-top: 3px;
     }
 
+    /* Botón certificado */
+    .btn-cert {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      padding: 7px 14px;
+      background: transparent;
+      border: 1px solid var(--red-light);
+      color: var(--red-light);
+      border-radius: 3px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .btn-cert:hover { background: var(--red); color: #fff; border-color: var(--red); }
+
+    @media (min-width: 768px) {
+      .achievement-item { padding: 28px 36px; }
+    }
+
+    /* ============================================================
+       VIDEOS — CARRUSEL TIPO ANUNCIO
+    ============================================================ */
+    #videos {
+      background: #000;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .vid-carousel {
+      position: relative;
+      width: 100%;
+      height: 500px;
+      overflow: hidden;
+      background: #000;
+    }
+
+    @media (max-width: 480px) {
+      .vid-carousel { height: 300px; }
+    }
+
+    .vid-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+    }
+
+    .vid-slide.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .vid-slide video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .vid-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.55);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      transition: background 0.2s;
+    }
+
+    .vid-arrow:hover { background: var(--red); }
+    .vid-arrow.prev  { left: 14px; }
+    .vid-arrow.next  { right: 14px; }
+
+    .vid-mute {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(0,0,0,0.55);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      transition: background 0.2s;
+    }
+
+    .vid-mute:hover { background: var(--red); }
+
+    .vid-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px 0;
+      background: #000;
+    }
+
+    .vid-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #444;
+      cursor: pointer;
+      transition: background 0.2s;
+      border: none;
+    }
+
+    .vid-dot.active { background: var(--red-light); }
+
     /* ============================================================
        ENTRENAMIENTOS
     ============================================================ */
-    #entrenamientos {
-      background: var(--bg);
-    }
+    #entrenamientos { background: var(--bg); }
 
     .plans-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 16px;
+      gap: 24px;
+      align-items: stretch;
     }
 
     @media (min-width: 600px) {
-      .plans-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
+      .plans-grid { grid-template-columns: repeat(3, 1fr); }
     }
 
     .plan-card {
@@ -434,25 +547,33 @@
       flex-direction: column;
       gap: 20px;
       transition: border-color 0.2s;
+      position: relative;
+      /* Espacio arriba igual en todas las tarjetas para nivelar títulos */
+      padding-top: 48px;
     }
 
     .plan-card:hover { border-color: var(--red); }
 
     .plan-card.featured {
       border-color: var(--red);
+      margin-top: 0;
     }
 
+    /* Badge flotante sobre la tarjeta */
     .plan-badge {
-      display: inline-block;
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
       background: var(--red);
-      color: var(--white);
+      color: #fff;
       font-size: 10px;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 2px;
       text-transform: uppercase;
-      padding: 4px 10px;
-      border-radius: 2px;
-      margin-bottom: -8px;
+      padding: 5px 14px;
+      border-radius: 20px;
+      white-space: nowrap;
     }
 
     .plan-name {
@@ -469,9 +590,7 @@
       line-height: 1.6;
     }
 
-    .plan-cta {
-      margin-top: auto;
-    }
+    .plan-cta { margin-top: auto; }
 
     .btn-wa-plan {
       display: flex;
@@ -492,10 +611,7 @@
       text-decoration: none;
     }
 
-    .btn-wa-plan:hover {
-      background: #25d366;
-      color: #000;
-    }
+    .btn-wa-plan:hover { background: #25d366; color: #000; }
 
     /* ============================================================
        CONTACTO / CTA FINAL
@@ -553,10 +669,7 @@
       text-align: center;
     }
 
-    .footer-text {
-      font-size: 13px;
-      color: #555;
-    }
+    .footer-text { font-size: 13px; color: #555; }
 
     .footer-text a {
       color: #666;
@@ -567,82 +680,9 @@
     .footer-text a:hover { color: var(--white); }
 
     /* ============================================================
-       SVG ICONS (inline, no dependencias)
+       SVG ICONS
     ============================================================ */
-    .icon-wa {
-      width: 18px;
-      height: 18px;
-      flex-shrink: 0;
-    }
-
-    .icon-ig {
-      width: 18px;
-      height: 18px;
-      flex-shrink: 0;
-    }
-
-    /* ============================================================
-       GALERÍA — CARRUSEL
-    ============================================================ */
-    #galeria {
-      background: var(--bg);
-      border-top: 1px solid var(--border);
-    }
-
-    .carousel-wrapper {
-      position: relative;
-    }
-
-    .carousel-track {
-      display: flex;
-      gap: 12px;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      padding-bottom: 8px;
-    }
-
-    .carousel-track::-webkit-scrollbar { display: none; }
-
-    .carousel-track img {
-      height: 400px;
-      width: auto;
-      flex-shrink: 0;
-      border-radius: 8px;
-      scroll-snap-align: start;
-      object-fit: cover;
-      display: block;
-    }
-
-    .carousel-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(0,0,0,0.6);
-      border: 1px solid #444;
-      color: #fff;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      font-size: 20px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10;
-      transition: background 0.2s;
-    }
-
-    .carousel-btn:hover { background: var(--red); }
-    .carousel-btn.prev  { left: 0; }
-    .carousel-btn.next  { right: 0; }
-
-    @media (max-width: 480px) {
-      .carousel-track img { height: 280px; }
-      .carousel-btn { display: none; }
-    }
+    .icon-wa, .icon-ig { width: 18px; height: 18px; flex-shrink: 0; }
 
     /* ============================================================
        MODAL CERTIFICADO
@@ -672,15 +712,12 @@
 
     .modal-close {
       position: absolute;
-      top: 10px;
-      right: 12px;
+      top: 10px; right: 12px;
       background: rgba(0,0,0,0.6);
       border: none;
       color: #fff;
       font-size: 22px;
-      line-height: 1;
-      width: 36px;
-      height: 36px;
+      width: 36px; height: 36px;
       border-radius: 50%;
       cursor: pointer;
       display: flex;
@@ -701,155 +738,14 @@
     @media (max-width: 480px) {
       .modal-box iframe { height: 360px; }
     }
-
-    /* Botón certificado */
-    .btn-cert {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 10px;
-      padding: 7px 14px;
-      background: transparent;
-      border: 1px solid var(--red-light);
-      color: var(--red-light);
-      border-radius: 3px;
-      font-family: var(--font-body);
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      cursor: pointer;
-      transition: background 0.2s, color 0.2s;
-    }
-
-    .btn-cert:hover { background: var(--red); color: #fff; border-color: var(--red); }
-
-    /* ============================================================
-       VIDEOS — CARRUSEL TIPO ANUNCIO
-    ============================================================ */
-    #videos {
-      background: #000;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 72px 0;
-    }
-
-    .vid-carousel {
-      position: relative;
-      width: 100%;
-      height: 500px;
-      overflow: hidden;
-      background: #000;
-    }
-
-    @media (max-width: 480px) {
-      .vid-carousel { height: 300px; }
-    }
-
-    .vid-slide {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      transition: opacity 0.4s;
-      pointer-events: none;
-    }
-
-    .vid-slide.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .vid-slide video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    /* Flechas */
-    .vid-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(0,0,0,0.55);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: #fff;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      font-size: 24px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 20;
-      transition: background 0.2s;
-    }
-
-    .vid-arrow:hover { background: var(--red); }
-    .vid-arrow.prev  { left: 14px; }
-    .vid-arrow.next  { right: 14px; }
-
-    /* Botón mute */
-    .vid-mute {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      background: rgba(0,0,0,0.55);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: #fff;
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      font-size: 18px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 20;
-      transition: background 0.2s;
-    }
-
-    .vid-mute:hover { background: var(--red); }
-
-    /* Dots */
-    .vid-dots {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 16px;
-    }
-
-    .vid-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #444;
-      cursor: pointer;
-      transition: background 0.2s;
-      border: none;
-    }
-
-    .vid-dot.active { background: var(--red-light); }
-
-    /* ============================================================
-       RESPONSIVE
-    ============================================================ */
-    @media (min-width: 768px) {
-      .achievement-item {
-        padding: 28px 36px;
-      }
-
-      .sobre-text {
-        font-size: 18px;
-      }
-    }
   </style>
 </head>
 
 <body>
 
   <!-- Botón modo claro/oscuro -->
-  <button id="theme-toggle" title="Cambiar modo" onclick="document.body.classList.toggle('light-mode');this.textContent=document.body.classList.contains('light-mode')?'🌙':'☀️'">☀️</button>
+  <button id="theme-toggle" title="Cambiar modo"
+    onclick="document.body.classList.toggle('light-mode');this.textContent=document.body.classList.contains('light-mode')?'🌙':'☀️'">☀️</button>
 
   <!-- Modal certificado mundial -->
   <div id="modal-cert" class="modal-overlay" onclick="if(event.target===this)this.classList.remove('open')">
@@ -859,6 +755,7 @@
               width="100%" height="500px" allow="autoplay"></iframe>
     </div>
   </div>
+
 
   <!-- ============================================================
        HERO
@@ -878,7 +775,6 @@
         <a class="btn btn-whatsapp"
            href="https://wa.me/573232037744?text=Hola%20Pablo%2C%20quiero%20información%20sobre%20entrenamientos"
            target="_blank" rel="noopener">
-          <!-- WhatsApp icon -->
           <svg class="icon-wa" viewBox="0 0 24 24" fill="currentColor">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
             <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.528 5.845L.057 23.854l6.18-1.621A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.88 0-3.65-.49-5.189-1.345l-.372-.22-3.671.963.98-3.584-.243-.388A9.93 9.93 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
@@ -888,7 +784,6 @@
         <a class="btn btn-instagram"
            href="https://instagram.com/pablogiraldomma"
            target="_blank" rel="noopener">
-          <!-- Instagram icon -->
           <svg class="icon-ig" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
           </svg>
@@ -909,95 +804,109 @@
       <h2 class="section-title">Disciplinas</h2>
 
       <div class="disciplines-grid">
-
         <div class="discipline-card">
           <span class="discipline-icon">🥊</span>
           <span class="discipline-name">MMA</span>
         </div>
-
         <div class="discipline-card">
           <span class="discipline-icon">🥋</span>
           <span class="discipline-name">Jiu Jitsu</span>
         </div>
-
         <div class="discipline-card">
           <span class="discipline-icon">🦵</span>
           <span class="discipline-name">Muay Thai / Kickboxing</span>
         </div>
-
         <div class="discipline-card">
           <span class="discipline-icon">🥊</span>
           <span class="discipline-name">Boxeo</span>
         </div>
-
         <div class="discipline-card">
           <span class="discipline-icon">🤼</span>
           <span class="discipline-name">Wrestling</span>
         </div>
-
         <div class="discipline-card">
           <span class="discipline-icon">🤸</span>
           <span class="discipline-name">Grappling</span>
         </div>
-
         <div class="discipline-card">
           <span class="discipline-icon">💪</span>
           <span class="discipline-name">Acondicionamiento Físico</span>
         </div>
-
       </div>
     </div>
   </section>
 
 
   <!-- ============================================================
-       SOBRE MÍ
+       SOBRE MÍ — dos columnas: carrusel auto + texto
   ============================================================ -->
   <section id="sobre" class="section">
     <div class="container">
       <p class="section-label">Quién soy</p>
       <h2 class="section-title">Sobre mí</h2>
 
-      <div class="sobre-text">
-        <p>
-          Soy atleta de MMA con más de 5 años de experiencia, formado en
-          <strong>International Fight MMA</strong> — academia de artes marciales mixtas
-          con sede en Bucaramanga, Colombia.
-        </p>
-        <p>
-          Imparto clases en la academia y ofrezco programas de entrenamiento
-          personalizado para todos los niveles: desde personas que quieren
-          iniciarse en el combate hasta competidores que buscan un nivel técnico
-          más alto.
-        </p>
-        <p>
-          Mi enfoque combina técnica de combate, preparación física y mentalidad
-          competitiva — adaptado a los objetivos de cada persona.
-        </p>
-        <p>
-          Más allá de competir, he acompañado a mis compañeros como esquinero en
-          eventos de alto nivel: estuve en la esquina durante el Mundial OCAMM/GAMMA
-          2025 en Brasil y en el Nacional OCAMM 2025, apoyando a mis compañeros de
-          equipo en sus combates.
-        </p>
-      </div>
+      <div class="sobre-layout">
 
-      <a class="sobre-link"
-         href="https://internationalfightmma.github.io/#peleadores"
-         target="_blank" rel="noopener">
-        Ver mi perfil en International Fight MMA →
-      </a>
+        <!-- Columna izquierda: carrusel automático sin flechas -->
+        <div class="sobre-carousel" id="sobreCarousel">
+          <img src="https://drive.google.com/thumbnail?id=1agV60FWjlO8lzZmdTiHWFJjRnnZzIJhX&sz=w800" alt="Pablo Giraldo" class="active" loading="lazy">
+          <img src="https://drive.google.com/thumbnail?id=1nDUMxrmMD3mXsEJkSiI2Rwnd7xGfpYCa&sz=w800" alt="Pablo Giraldo" loading="lazy">
+          <img src="https://drive.google.com/thumbnail?id=1-ovJjEroDoYAQd9QPpbgWPCzinoTqoGp&sz=w800" alt="Pablo Giraldo" loading="lazy">
+          <img src="https://drive.google.com/thumbnail?id=1ri9GxKV_wY1UTcbWLbYVZWkzUiUEgEJQ&sz=w800" alt="Pablo Giraldo" loading="lazy">
+          <img src="https://drive.google.com/thumbnail?id=1y6VTo1ox3a3wJ3Sa6fCwhXNCtQiISYYK&sz=w800" alt="Pablo Giraldo" loading="lazy">
+          <img src="https://drive.google.com/thumbnail?id=1vXR5hTsUrWOd0-eXk5FTwvbxX50VIAPO&sz=w800" alt="Pablo Giraldo" loading="lazy">
+          <img src="https://drive.google.com/thumbnail?id=1hiLAsAcXtAZJ_w3I2rZ8iwaE3oJBHl7n&sz=w800" alt="Pablo Giraldo" loading="lazy">
+          <img src="VIDEOS Y FOTOS/FOTO 1.jpg" alt="Pablo Giraldo" loading="lazy">
+          <img src="VIDEOS Y FOTOS/FOTO 2.JPG" alt="Pablo Giraldo" loading="lazy">
+          <img src="VIDEOS Y FOTOS/FOTO 3.jpg" alt="Pablo Giraldo" loading="lazy">
+          <img src="VIDEOS Y FOTOS/FOTO 4.jpg" alt="Pablo Giraldo" loading="lazy">
+        </div>
+
+        <!-- Columna derecha: texto -->
+        <div>
+          <div class="sobre-text">
+            <p>
+              Soy atleta de MMA con más de 5 años de experiencia, formado en
+              <strong>International Fight MMA</strong> — academia de artes marciales mixtas
+              con sede en Bucaramanga, Colombia.
+            </p>
+            <p>
+              Imparto clases en la academia y ofrezco programas de entrenamiento
+              personalizado para todos los niveles: desde personas que quieren
+              iniciarse en el combate hasta competidores que buscan un nivel técnico
+              más alto.
+            </p>
+            <p>
+              Mi enfoque combina técnica de combate, preparación física y mentalidad
+              competitiva — adaptado a los objetivos de cada persona.
+            </p>
+            <p>
+              Más allá de competir, he acompañado a mis compañeros como esquinero en
+              eventos de alto nivel: estuve en la esquina durante el Mundial OCAMM/GAMMA
+              2025 en Brasil y en el Nacional OCAMM 2025, apoyando a mis compañeros de
+              equipo en sus combates.
+            </p>
+          </div>
+
+          <a class="sobre-link"
+             href="https://internationalfightmma.github.io/#peleadores"
+             target="_blank" rel="noopener">
+            Ver mi perfil en International Fight MMA →
+          </a>
+        </div>
+
+      </div>
     </div>
   </section>
 
 
   <!-- ============================================================
-       PALMARÉS / LOGROS
+       LOGROS
   ============================================================ -->
   <section id="palmares" class="section">
     <div class="container">
       <p class="section-label">Competencia</p>
-      <h2 class="section-title">Palmarés</h2>
+      <h2 class="section-title">Logros</h2>
 
       <div class="achievements-list">
 
@@ -1014,7 +923,6 @@
 
         <div class="achievement-item">
           <div class="achievement-rank">
-            <!-- Ícono de participación en lugar de número -->
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--red-light);">
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
             </svg>
@@ -1047,118 +955,45 @@
 
 
   <!-- ============================================================
-       GALERÍA — CARRUSEL
-  ============================================================ -->
-  <section id="galeria" class="section">
-    <div class="container">
-      <p class="section-label">Imágenes</p>
-      <h2 class="section-title">Galería</h2>
-    </div>
-    <div class="carousel-wrapper">
-      <button class="carousel-btn prev" onclick="document.getElementById('carousel').scrollBy({left:-420,behavior:'smooth'})">&#8249;</button>
-      <div class="carousel-track" id="carousel" style="padding: 0 20px;">
-        <img src="https://drive.google.com/thumbnail?id=1agV60FWjlO8lzZmdTiHWFJjRnnZzIJhX&sz=w800" alt="Pablo Giraldo" loading="lazy">
-        <img src="https://drive.google.com/thumbnail?id=1nDUMxrmMD3mXsEJkSiI2Rwnd7xGfpYCa&sz=w800" alt="Pablo Giraldo" loading="lazy">
-        <img src="https://drive.google.com/thumbnail?id=1-ovJjEroDoYAQd9QPpbgWPCzinoTqoGp&sz=w800" alt="Pablo Giraldo" loading="lazy">
-        <img src="https://drive.google.com/thumbnail?id=1ri9GxKV_wY1UTcbWLbYVZWkzUiUEgEJQ&sz=w800" alt="Pablo Giraldo" loading="lazy">
-        <img src="https://drive.google.com/thumbnail?id=1y6VTo1ox3a3wJ3Sa6fCwhXNCtQiISYYK&sz=w800" alt="Pablo Giraldo" loading="lazy">
-        <img src="https://drive.google.com/thumbnail?id=1vXR5hTsUrWOd0-eXk5FTwvbxX50VIAPO&sz=w800" alt="Pablo Giraldo" loading="lazy">
-        <img src="https://drive.google.com/thumbnail?id=1hiLAsAcXtAZJ_w3I2rZ8iwaE3oJBHl7n&sz=w800" alt="Pablo Giraldo" loading="lazy">
-        <img src="VIDEOS Y FOTOS/FOTO 1.jpg" alt="Pablo Giraldo" loading="lazy">
-        <img src="VIDEOS Y FOTOS/FOTO 2.JPG" alt="Pablo Giraldo" loading="lazy">
-        <img src="VIDEOS Y FOTOS/FOTO 3.jpg" alt="Pablo Giraldo" loading="lazy">
-        <img src="VIDEOS Y FOTOS/FOTO 4.jpg" alt="Pablo Giraldo" loading="lazy">
-      </div>
-      <button class="carousel-btn next" onclick="document.getElementById('carousel').scrollBy({left:420,behavior:'smooth'})">&#8250;</button>
-    </div>
-  </section>
-
-
-  <!-- ============================================================
-       VIDEOS — EN ACCIÓN
+       VIDEOS — EN ACCIÓN (tipo anuncio, sin controles)
   ============================================================ -->
   <section id="videos">
-    <div class="container" style="padding-bottom: 0;">
+    <div class="container" style="padding-top: 72px; padding-bottom: 0;">
       <p class="section-label">En acción</p>
       <h2 class="section-title" style="margin-bottom: 24px;">Videos</h2>
     </div>
 
     <div class="vid-carousel" id="vidCarousel">
 
-      <!-- Slide 1 -->
       <div class="vid-slide active">
         <video autoplay loop muted playsinline preload="auto">
           <source src="VIDEOS Y FOTOS/Copia de video 1 pablo.mp4" type="video/mp4">
         </video>
       </div>
 
-      <!-- Slide 2 -->
       <div class="vid-slide">
         <video loop muted playsinline preload="metadata">
           <source src="VIDEOS Y FOTOS/Copia de Video 2 pablo.MOV" type="video/mp4">
         </video>
       </div>
 
-      <!-- Slide 3 -->
       <div class="vid-slide">
         <video loop muted playsinline preload="metadata">
           <source src="VIDEOS Y FOTOS/Copia de Video 3 pablo.mov" type="video/mp4">
         </video>
       </div>
 
-      <!-- Flechas -->
       <button class="vid-arrow prev" onclick="vidNav(-1)">&#8249;</button>
       <button class="vid-arrow next" onclick="vidNav(1)">&#8250;</button>
-
-      <!-- Mute toggle -->
       <button class="vid-mute" id="vidMuteBtn" onclick="vidToggleMute()">🔇</button>
     </div>
 
-    <!-- Dots -->
     <div class="vid-dots">
       <button class="vid-dot active" onclick="vidGo(0)"></button>
       <button class="vid-dot" onclick="vidGo(1)"></button>
       <button class="vid-dot" onclick="vidGo(2)"></button>
     </div>
-
-    <div style="padding-bottom: 72px;"></div>
   </section>
-
-  <script>
-    (function() {
-      let cur = 0;
-      const slides = document.querySelectorAll('.vid-slide');
-      const dots   = document.querySelectorAll('.vid-dot');
-      const muteBtn = document.getElementById('vidMuteBtn');
-      let isMuted = true;
-
-      function activate(idx) {
-        // pause old
-        slides[cur].querySelector('video').pause();
-        slides[cur].classList.remove('active');
-        dots[cur].classList.remove('active');
-        cur = (idx + slides.length) % slides.length;
-        // play new
-        const v = slides[cur].querySelector('video');
-        v.muted = isMuted;
-        v.play();
-        slides[cur].classList.add('active');
-        dots[cur].classList.add('active');
-      }
-
-      window.vidNav = function(dir) { activate(cur + dir); };
-      window.vidGo  = function(idx) { activate(idx); };
-
-      window.vidToggleMute = function() {
-        isMuted = !isMuted;
-        slides.forEach(s => { s.querySelector('video').muted = isMuted; });
-        muteBtn.textContent = isMuted ? '🔇' : '🔊';
-      };
-
-      // Ensure first video plays on load
-      slides[0].querySelector('video').play().catch(() => {});
-    })();
-  </script>
 
 
   <!-- ============================================================
@@ -1192,11 +1027,11 @@
           </div>
         </div>
 
-        <!-- Plan 15 clases (destacado) -->
+        <!-- Plan 15 clases (badge flotante) -->
         <div class="plan-card featured">
+          <span class="plan-badge">Más popular</span>
           <div>
-            <span class="plan-badge">Más popular</span>
-            <div class="plan-name" style="margin-top: 12px;">Plan 15 Clases</div>
+            <div class="plan-name">Plan 15 Clases</div>
             <p class="plan-desc">
               15 sesiones para un progreso más sólido. Más continuidad,
               mejores resultados. Recomendado para quienes buscan
@@ -1246,7 +1081,6 @@
   ============================================================ -->
   <section id="contacto">
     <div class="container" style="text-align: center; padding: 80px 20px;">
-
       <p class="section-label" style="justify-content: center; display: flex;">Empecemos</p>
       <h2 class="cta-headline">¿Listo para entrenar?</h2>
       <p class="cta-sub">Escríbeme y coordinamos tu primera sesión.</p>
@@ -1271,7 +1105,6 @@
           @pablogiraldomma
         </a>
       </div>
-
     </div>
   </section>
 
@@ -1285,6 +1118,55 @@
       Miembro de <a href="https://internationalfightmma.github.io" target="_blank" rel="noopener">International Fight MMA</a>
     </p>
   </footer>
+
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+    /* --- Carrusel automático "Sobre mí" --- */
+    (function() {
+      const imgs = document.querySelectorAll('#sobreCarousel img');
+      let i = 0;
+      setInterval(function() {
+        imgs[i].classList.remove('active');
+        i = (i + 1) % imgs.length;
+        imgs[i].classList.add('active');
+      }, 3000);
+    })();
+
+    /* --- Carrusel de videos --- */
+    (function() {
+      let cur = 0;
+      const slides  = document.querySelectorAll('.vid-slide');
+      const dots    = document.querySelectorAll('.vid-dot');
+      const muteBtn = document.getElementById('vidMuteBtn');
+      let isMuted   = true;
+
+      function activate(idx) {
+        slides[cur].querySelector('video').pause();
+        slides[cur].classList.remove('active');
+        dots[cur].classList.remove('active');
+        cur = (idx + slides.length) % slides.length;
+        const v = slides[cur].querySelector('video');
+        v.muted = isMuted;
+        v.play().catch(function(){});
+        slides[cur].classList.add('active');
+        dots[cur].classList.add('active');
+      }
+
+      window.vidNav = function(dir) { activate(cur + dir); };
+      window.vidGo  = function(idx) { activate(idx); };
+
+      window.vidToggleMute = function() {
+        isMuted = !isMuted;
+        slides.forEach(function(s) { s.querySelector('video').muted = isMuted; });
+        muteBtn.textContent = isMuted ? '🔇' : '🔊';
+      };
+
+      slides[0].querySelector('video').play().catch(function(){});
+    })();
+  </script>
 
 </body>
 </html>
