@@ -210,9 +210,9 @@
       inset: 0;
       background: linear-gradient(
         to bottom,
-        transparent 30%,
-        rgba(0, 0, 0, 0.5) 60%,
-        rgba(0, 0, 0, 0.92) 100%
+        rgba(0,0,0,0.1) 20%,
+        rgba(0,0,0,0.5) 55%,
+        rgba(0,0,0,0.85) 100%
       );
     }
 
@@ -231,13 +231,15 @@
       text-transform: uppercase;
       letter-spacing: 3px;
       line-height: 1;
-      color: var(--white);
+      color: #fff;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.9);
     }
 
     .hero-tagline {
       font-family: var(--font-body);
       font-size: clamp(13px, 3.5vw, 17px);
-      color: #aaa;
+      color: #fff;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.9);
       letter-spacing: 2px;
       text-transform: uppercase;
       margin: 14px 0 32px;
@@ -272,8 +274,9 @@
     }
 
     .disciplines-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 1px;
       background: var(--border);
       border: 1px solid var(--border);
@@ -289,6 +292,12 @@
       align-items: center;
       gap: 12px;
       transition: background 0.2s;
+      flex: 0 0 calc(25% - 1px);
+      min-width: 120px;
+    }
+
+    @media (max-width: 480px) {
+      .discipline-card { flex: 0 0 calc(50% - 1px); }
     }
 
     .discipline-card:hover {
@@ -573,39 +582,67 @@
     }
 
     /* ============================================================
-       GALERÍA
+       GALERÍA — CARRUSEL
     ============================================================ */
     #galeria {
       background: var(--bg);
       border-top: 1px solid var(--border);
     }
 
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
+    .carousel-wrapper {
+      position: relative;
     }
 
-    @media (min-width: 600px) {
-      .gallery-grid { grid-template-columns: repeat(3, 1fr); }
+    .carousel-track {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 8px;
     }
 
-    .gallery-item {
-      aspect-ratio: 1 / 1;
-      overflow: hidden;
-      border-radius: 3px;
-      cursor: pointer;
-    }
+    .carousel-track::-webkit-scrollbar { display: none; }
 
-    .gallery-item img {
-      width: 100%;
-      height: 100%;
+    .carousel-track img {
+      height: 400px;
+      width: auto;
+      flex-shrink: 0;
+      border-radius: 8px;
+      scroll-snap-align: start;
       object-fit: cover;
       display: block;
-      transition: transform 0.3s;
     }
 
-    .gallery-item:hover img { transform: scale(1.05); }
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.6);
+      border: 1px solid #444;
+      color: #fff;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: background 0.2s;
+    }
+
+    .carousel-btn:hover { background: var(--red); }
+    .carousel-btn.prev  { left: 0; }
+    .carousel-btn.next  { right: 0; }
+
+    @media (max-width: 480px) {
+      .carousel-track img { height: 280px; }
+      .carousel-btn { display: none; }
+    }
 
     /* ============================================================
        MODAL CERTIFICADO
@@ -687,14 +724,44 @@
     .btn-cert:hover { background: var(--red); color: #fff; border-color: var(--red); }
 
     /* ============================================================
-       RESPONSIVE
+       VIDEOS
     ============================================================ */
-    @media (min-width: 480px) {
-      .disciplines-grid {
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      }
+    #videos {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
     }
 
+    .videos-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    @media (min-width: 700px) {
+      .videos-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .video-item video {
+      width: 100%;
+      border-radius: 8px;
+      display: block;
+      background: #000;
+    }
+
+    .video-label {
+      font-family: var(--font-title);
+      font-size: 13px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
     @media (min-width: 768px) {
       .achievement-item {
         padding: 28px 36px;
@@ -728,7 +795,7 @@
 
     <img src="https://drive.google.com/thumbnail?id=1naJekzn4-laKwzAjZG4tr9up0RC46yzE&sz=w1600"
          alt="Pablo Giraldo"
-         style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;">
+         style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;">
 
     <div class="hero-overlay"></div>
 
@@ -835,6 +902,12 @@
           Mi enfoque combina técnica de combate, preparación física y mentalidad
           competitiva — adaptado a los objetivos de cada persona.
         </p>
+        <p>
+          Más allá de competir, he acompañado a mis compañeros como esquinero en
+          eventos de alto nivel: estuve en la esquina durante el Mundial OCAMM/GAMMA
+          2025 en Brasil y en el Nacional OCAMM 2025, apoyando a mis compañeros de
+          equipo en sus combates.
+        </p>
       </div>
 
       <a class="sobre-link"
@@ -902,34 +975,63 @@
 
 
   <!-- ============================================================
-       GALERÍA
+       GALERÍA — CARRUSEL
   ============================================================ -->
   <section id="galeria" class="section">
     <div class="container">
       <p class="section-label">Imágenes</p>
       <h2 class="section-title">Galería</h2>
-      <div class="gallery-grid">
-        <div class="gallery-item">
-          <img src="https://drive.google.com/thumbnail?id=1agV60FWjlO8lzZmdTiHWFJjRnnZzIJhX&sz=w800" alt="Pablo Giraldo" loading="lazy">
+    </div>
+    <div class="carousel-wrapper">
+      <button class="carousel-btn prev" onclick="document.getElementById('carousel').scrollBy({left:-420,behavior:'smooth'})">&#8249;</button>
+      <div class="carousel-track" id="carousel" style="padding: 0 20px;">
+        <img src="https://drive.google.com/thumbnail?id=1agV60FWjlO8lzZmdTiHWFJjRnnZzIJhX&sz=w800" alt="Pablo Giraldo" loading="lazy">
+        <img src="https://drive.google.com/thumbnail?id=1nDUMxrmMD3mXsEJkSiI2Rwnd7xGfpYCa&sz=w800" alt="Pablo Giraldo" loading="lazy">
+        <img src="https://drive.google.com/thumbnail?id=1-ovJjEroDoYAQd9QPpbgWPCzinoTqoGp&sz=w800" alt="Pablo Giraldo" loading="lazy">
+        <img src="https://drive.google.com/thumbnail?id=1ri9GxKV_wY1UTcbWLbYVZWkzUiUEgEJQ&sz=w800" alt="Pablo Giraldo" loading="lazy">
+        <img src="https://drive.google.com/thumbnail?id=1y6VTo1ox3a3wJ3Sa6fCwhXNCtQiISYYK&sz=w800" alt="Pablo Giraldo" loading="lazy">
+        <img src="https://drive.google.com/thumbnail?id=1vXR5hTsUrWOd0-eXk5FTwvbxX50VIAPO&sz=w800" alt="Pablo Giraldo" loading="lazy">
+        <img src="https://drive.google.com/thumbnail?id=1hiLAsAcXtAZJ_w3I2rZ8iwaE3oJBHl7n&sz=w800" alt="Pablo Giraldo" loading="lazy">
+        <img src="VIDEOS Y FOTOS/FOTO 1.jpg" alt="Pablo Giraldo" loading="lazy">
+        <img src="VIDEOS Y FOTOS/FOTO 2.JPG" alt="Pablo Giraldo" loading="lazy">
+        <img src="VIDEOS Y FOTOS/FOTO 3.jpg" alt="Pablo Giraldo" loading="lazy">
+        <img src="VIDEOS Y FOTOS/FOTO 4.jpg" alt="Pablo Giraldo" loading="lazy">
+      </div>
+      <button class="carousel-btn next" onclick="document.getElementById('carousel').scrollBy({left:420,behavior:'smooth'})">&#8250;</button>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       VIDEOS — EN ACCIÓN
+  ============================================================ -->
+  <section id="videos" class="section">
+    <div class="container">
+      <p class="section-label">En acción</p>
+      <h2 class="section-title">Videos</h2>
+      <div class="videos-grid">
+
+        <div class="video-item">
+          <video controls muted playsinline preload="metadata">
+            <source src="VIDEOS Y FOTOS/Copia de video 1 pablo.mp4" type="video/mp4">
+          </video>
+          <p class="video-label">Entrenamiento #1</p>
         </div>
-        <div class="gallery-item">
-          <img src="https://drive.google.com/thumbnail?id=1nDUMxrmMD3mXsEJkSiI2Rwnd7xGfpYCa&sz=w800" alt="Pablo Giraldo" loading="lazy">
+
+        <div class="video-item">
+          <video controls muted playsinline preload="metadata">
+            <source src="VIDEOS Y FOTOS/Copia de Video 2 pablo.MOV" type="video/mp4">
+          </video>
+          <p class="video-label">Entrenamiento #2</p>
         </div>
-        <div class="gallery-item">
-          <img src="https://drive.google.com/thumbnail?id=1-ovJjEroDoYAQd9QPpbgWPCzinoTqoGp&sz=w800" alt="Pablo Giraldo" loading="lazy">
+
+        <div class="video-item">
+          <video controls muted playsinline preload="metadata">
+            <source src="VIDEOS Y FOTOS/Copia de Video 3 pablo.mov" type="video/mp4">
+          </video>
+          <p class="video-label">Entrenamiento #3</p>
         </div>
-        <div class="gallery-item">
-          <img src="https://drive.google.com/thumbnail?id=1ri9GxKV_wY1UTcbWLbYVZWkzUiUEgEJQ&sz=w800" alt="Pablo Giraldo" loading="lazy">
-        </div>
-        <div class="gallery-item">
-          <img src="https://drive.google.com/thumbnail?id=1y6VTo1ox3a3wJ3Sa6fCwhXNCtQiISYYK&sz=w800" alt="Pablo Giraldo" loading="lazy">
-        </div>
-        <div class="gallery-item">
-          <img src="https://drive.google.com/thumbnail?id=1vXR5hTsUrWOd0-eXk5FTwvbxX50VIAPO&sz=w800" alt="Pablo Giraldo" loading="lazy">
-        </div>
-        <div class="gallery-item">
-          <img src="https://drive.google.com/thumbnail?id=1hiLAsAcXtAZJ_w3I2rZ8iwaE3oJBHl7n&sz=w800" alt="Pablo Giraldo" loading="lazy">
-        </div>
+
       </div>
     </div>
   </section>
