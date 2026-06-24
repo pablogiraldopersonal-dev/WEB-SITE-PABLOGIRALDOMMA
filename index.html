@@ -85,6 +85,156 @@
       font-size: 16px;
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+      padding-top: 56px;
+    }
+
+    /* ============================================================
+       NAVBAR
+    ============================================================ */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 56px;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+    }
+
+    body.light-mode #navbar {
+      background: rgba(244,244,244,0.9);
+      border-bottom-color: rgba(0,0,0,0.1);
+    }
+
+    .nav-inner {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .nav-logo {
+      font-family: var(--font-title);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--red-light);
+      letter-spacing: 2px;
+      text-decoration: none;
+      flex-shrink: 0;
+      margin-right: 32px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      list-style: none;
+      flex: 1;
+    }
+
+    .nav-links a {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      color: #bbb;
+      text-decoration: none;
+      padding: 6px 10px;
+      border-radius: 3px;
+      transition: color 0.2s, background 0.2s;
+      white-space: nowrap;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+      background: rgba(255,255,255,0.07);
+    }
+
+    body.light-mode .nav-links a { color: #555; }
+    body.light-mode .nav-links a:hover { color: #111; background: rgba(0,0,0,0.06); }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    /* Theme toggle inside navbar */
+    #theme-toggle {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #ccc;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    #theme-toggle:hover { background: rgba(255,255,255,0.1); }
+    body.light-mode #theme-toggle { border-color: rgba(0,0,0,0.2); color: #555; }
+
+    /* Hamburger */
+    #nav-burger {
+      display: none;
+      background: transparent;
+      border: none;
+      color: #ccc;
+      font-size: 22px;
+      cursor: pointer;
+      padding: 4px 8px;
+      line-height: 1;
+    }
+
+    /* Mobile nav drawer */
+    #nav-mobile {
+      display: none;
+      flex-direction: column;
+      position: fixed;
+      top: 56px; left: 0; right: 0;
+      background: rgba(10,10,10,0.97);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      z-index: 999;
+      padding: 12px 0 20px;
+    }
+
+    body.light-mode #nav-mobile {
+      background: rgba(244,244,244,0.98);
+    }
+
+    #nav-mobile.open { display: flex; }
+
+    #nav-mobile a {
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 500;
+      color: #ccc;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      transition: color 0.2s, background 0.2s;
+    }
+
+    #nav-mobile a:hover { color: #fff; background: rgba(255,255,255,0.05); }
+    #nav-mobile a:last-child { border-bottom: none; }
+
+    body.light-mode #nav-mobile a { color: #444; }
+    body.light-mode #nav-mobile a:hover { color: #111; }
+
+    @media (max-width: 768px) {
+      .nav-links   { display: none; }
+      #nav-burger  { display: block; }
     }
 
     a { color: inherit; text-decoration: none; }
@@ -172,13 +322,23 @@
       color: var(--white);
     }
 
+    /* Hero botones compactos */
+    .hero-cta .btn {
+      padding: 8px 16px;
+      font-size: 13px;
+      gap: 6px;
+    }
+
+    .hero-cta .btn svg { width: 16px; height: 16px; }
+
     /* Hero CTA: 2x2 en móvil */
     @media (max-width: 520px) {
       .hero-cta {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        max-width: 340px;
+        max-width: 300px;
         margin: 0 auto;
+        gap: 8px;
       }
     }
 
@@ -973,9 +1133,35 @@
 
 <body>
 
-  <!-- Botón modo claro/oscuro -->
-  <button id="theme-toggle" title="Cambiar modo"
-    onclick="document.body.classList.toggle('light-mode');this.textContent=document.body.classList.contains('light-mode')?'🌙':'☀️'">☀️</button>
+  <!-- NAVBAR -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo">PG</a>
+      <ul class="nav-links">
+        <li><a href="#hero">Inicio</a></li>
+        <li><a href="#disciplinas">Disciplinas</a></li>
+        <li><a href="#sobre">Sobre mí</a></li>
+        <li><a href="#palmares">Logros</a></li>
+        <li><a href="#entrenamientos">Entrenamientos</a></li>
+        <li><a href="#apoyame">Apóyame</a></li>
+      </ul>
+      <div class="nav-right">
+        <button id="theme-toggle" title="Cambiar modo"
+          onclick="document.body.classList.toggle('light-mode');this.textContent=document.body.classList.contains('light-mode')?'🌙':'☀️'">☀️</button>
+        <button id="nav-burger" aria-label="Menú" onclick="document.getElementById('nav-mobile').classList.toggle('open')">☰</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Menú móvil -->
+  <div id="nav-mobile">
+    <a href="#hero"           onclick="document.getElementById('nav-mobile').classList.remove('open')">Inicio</a>
+    <a href="#disciplinas"    onclick="document.getElementById('nav-mobile').classList.remove('open')">Disciplinas</a>
+    <a href="#sobre"          onclick="document.getElementById('nav-mobile').classList.remove('open')">Sobre mí</a>
+    <a href="#palmares"       onclick="document.getElementById('nav-mobile').classList.remove('open')">Logros</a>
+    <a href="#entrenamientos" onclick="document.getElementById('nav-mobile').classList.remove('open')">Entrenamientos</a>
+    <a href="#apoyame"        onclick="document.getElementById('nav-mobile').classList.remove('open')">Apóyame</a>
+  </div>
 
   <!-- Modal Nequi -->
   <div id="modal-nequi" class="modal-overlay" onclick="if(event.target===this)this.classList.remove('open')">
@@ -1267,70 +1453,47 @@
 
         <!-- Plan 10 clases -->
         <div class="plan-card">
-          <div>
-            <div class="plan-name">Plan 10 Clases</div>
-            <p class="plan-desc">
-              Paquete de 10 sesiones personalizadas. Ideal para establecer
-              una rutina y trabajar fundamentos técnicos a tu ritmo.
-            </p>
-          </div>
-          <div class="plan-cta">
-            <a class="btn-wa-plan"
-               href="https://wa.me/573232037744?text=Hola%20Pablo%2C%20quiero%20información%20sobre%20entrenamientos"
-               target="_blank" rel="noopener">
-              <svg class="icon-wa" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.528 5.845L.057 23.854l6.18-1.621A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.88 0-3.65-.49-5.189-1.345l-.372-.22-3.671.963.98-3.584-.243-.388A9.93 9.93 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
-              </svg>
-              Consultar por WhatsApp
-            </a>
-          </div>
+          <div class="plan-name">Plan 10 Clases</div>
+          <p class="plan-desc">
+            Paquete de 10 sesiones personalizadas. Ideal para establecer
+            una rutina y trabajar fundamentos técnicos a tu ritmo.
+          </p>
         </div>
 
         <!-- Plan 15 clases (badge flotante) -->
         <div class="plan-card featured">
           <span class="plan-badge">Más popular</span>
-          <div>
-            <div class="plan-name">Plan 15 Clases</div>
-            <p class="plan-desc">
-              15 sesiones para un progreso más sólido. Más continuidad,
-              mejores resultados. Recomendado para quienes buscan
-              resultados concretos.
-            </p>
-          </div>
-          <div class="plan-cta">
-            <a class="btn-wa-plan"
-               href="https://wa.me/573232037744?text=Hola%20Pablo%2C%20quiero%20información%20sobre%20entrenamientos"
-               target="_blank" rel="noopener">
-              <svg class="icon-wa" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.528 5.845L.057 23.854l6.18-1.621A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.88 0-3.65-.49-5.189-1.345l-.372-.22-3.671.963.98-3.584-.243-.388A9.93 9.93 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
-              </svg>
-              Consultar por WhatsApp
-            </a>
-          </div>
+          <div class="plan-name">Plan 15 Clases</div>
+          <p class="plan-desc">
+            15 sesiones para un progreso más sólido. Más continuidad,
+            mejores resultados. Recomendado para quienes buscan
+            resultados concretos.
+          </p>
         </div>
 
         <!-- Clase individual -->
         <div class="plan-card">
-          <div>
-            <div class="plan-name">Clase Individual</div>
-            <p class="plan-desc">
-              Una sola sesión para probar la metodología, trabajar un
-              aspecto específico o prepararte para una competencia puntual.
-            </p>
-          </div>
-          <div class="plan-cta">
-            <a class="btn-wa-plan"
-               href="https://wa.me/573232037744?text=Hola%20Pablo%2C%20quiero%20información%20sobre%20entrenamientos"
-               target="_blank" rel="noopener">
-              <svg class="icon-wa" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.528 5.845L.057 23.854l6.18-1.621A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.88 0-3.65-.49-5.189-1.345l-.372-.22-3.671.963.98-3.584-.243-.388A9.93 9.93 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
-              </svg>
-              Consultar por WhatsApp
-            </a>
-          </div>
+          <div class="plan-name">Clase Individual</div>
+          <p class="plan-desc">
+            Una sola sesión para probar la metodología, trabajar un
+            aspecto específico o prepararte para una competencia puntual.
+          </p>
         </div>
 
       </div>
+
+      <!-- Botón único centrado -->
+      <div style="display:flex;justify-content:center;margin-top:36px;">
+        <a href="https://wa.me/573232037744?text=Hola%20Pablo%2C%20quiero%20información%20sobre%20entrenamientos"
+           target="_blank" rel="noopener"
+           style="display:inline-flex;align-items:center;gap:10px;background:#25d366;color:#000;font-family:'Inter',sans-serif;font-size:16px;font-weight:700;padding:16px 32px;border-radius:6px;text-decoration:none;max-width:400px;width:100%;justify-content:center;transition:opacity .2s;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0;">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.528 5.845L.057 23.854l6.18-1.621A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.88 0-3.65-.49-5.189-1.345l-.372-.22-3.671.963.98-3.584-.243-.388A9.93 9.93 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+          </svg>
+          Consultar disponibilidad → WhatsApp
+        </a>
+      </div>
+
     </div>
   </section>
 
