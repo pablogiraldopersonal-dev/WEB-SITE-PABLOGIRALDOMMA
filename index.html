@@ -688,60 +688,61 @@
 
     .plan-card {
       background: #111;
-      border: 1px solid #333;
+      border: 1px solid #222;
       border-top: 3px solid #cc0000;
       border-radius: 8px;
-      padding: 50px 40px;
+      padding: 48px 36px;
       text-align: center;
-      max-width: 360px;
-      width: 100%;
+      flex: 1;
+      min-width: 260px;
+      max-width: 340px;
       position: relative;
-      transition: transform 0.2s, border-color 0.2s;
+      transition: transform 0.2s;
     }
 
     .plan-card:hover { transform: translateY(-4px); }
 
-    .plan-card.featured { border: 2px solid #cc0000; border-top: 3px solid #cc0000; }
+    .plan-card.featured { border: 1px solid #cc0000; border-top: 3px solid #cc0000; }
 
-    .plan-number {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 5rem;
+    .plan-label {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 4px;
       color: #cc0000;
-      line-height: 1;
+      text-transform: uppercase;
       display: block;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
 
     .plan-badge {
       position: absolute;
-      top: -16px;
+      top: -14px;
       left: 50%;
       transform: translateX(-50%);
       background: #cc0000;
       color: #fff;
-      font-size: 10px;
-      font-weight: 700;
+      font-size: 11px;
       letter-spacing: 2px;
       text-transform: uppercase;
-      padding: 5px 16px;
+      padding: 4px 16px;
       border-radius: 20px;
       white-space: nowrap;
       font-family: 'Oswald', sans-serif;
     }
 
     .plan-name {
-      font-family: 'Cinzel', serif;
-      font-size: 1.4rem;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.5rem;
       color: #ffffff;
-      letter-spacing: 4px;
+      line-height: 1;
       margin-bottom: 16px;
       display: block;
     }
 
     .plan-desc {
-      font-size: 14px;
-      color: var(--gray);
-      line-height: 1.7;
+      font-size: 0.9rem;
+      color: #aaa;
+      line-height: 1.6;
     }
 
     /* Botón único centrado */
@@ -1053,7 +1054,7 @@
         <li><a href="#disciplinas">Disciplinas</a></li>
         <li><a href="#sobre">Sobre mí</a></li>
         <li><a href="#palmares">Logros</a></li>
-        <li><a href="#entrenamientos">Entrenamientos</a></li>
+        <li><a href="#entrenamientos">Planes</a></li>
         <li><a href="#apoyame">Apóyame</a></li>
       </ul>
       <button id="nav-burger" aria-label="Menú" onclick="document.getElementById('nav-mobile').classList.toggle('open')">☰</button>
@@ -1316,21 +1317,21 @@
       <div class="plans-grid">
 
         <div class="plan-card">
-          <span class="plan-number">10</span>
-          <span class="plan-name">Clases</span>
+          <span class="plan-label">Plan 10 Clases</span>
+          <span class="plan-name">10<br>CLASES</span>
           <p class="plan-desc">Paquete ideal para establecer una rutina y trabajar fundamentos técnicos.</p>
         </div>
 
         <div class="plan-card featured">
           <span class="plan-badge">Más popular</span>
-          <span class="plan-number">15</span>
-          <span class="plan-name">Clases</span>
+          <span class="plan-label">Plan 15 Clases</span>
+          <span class="plan-name">15<br>CLASES</span>
           <p class="plan-desc">15 sesiones para un progreso sólido. Más continuidad, mejores resultados.</p>
         </div>
 
         <div class="plan-card">
-          <span class="plan-number">1</span>
-          <span class="plan-name">Clase Individual</span>
+          <span class="plan-label">Clase Individual</span>
+          <span class="plan-name">1<br>SESIÓN</span>
           <p class="plan-desc">Una sesión para probar la metodología o prepararte para una competencia.</p>
         </div>
 
@@ -1472,7 +1473,7 @@
             <li><a href="#disciplinas">Disciplinas</a></li>
             <li><a href="#sobre">Sobre mí</a></li>
             <li><a href="#palmares">Logros</a></li>
-            <li><a href="#entrenamientos">Entrenamientos</a></li>
+            <li><a href="#entrenamientos">Planes</a></li>
             <li><a href="#apoyame">Apóyame</a></li>
           </ul>
         </nav>
