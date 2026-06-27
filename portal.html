@@ -695,6 +695,10 @@
       </div>
     </div>
     <div class="form-group">
+      <label>Clases individuales tomadas</label>
+      <input type="number" id="f-extra-clases" min="0" value="0" placeholder="0" />
+    </div>
+    <div class="form-group">
       <label>Contraseña de acceso del alumno *</label>
       <input type="text" id="f-pass-alumno" placeholder="Contraseña para que el alumno inicie sesión" />
     </div>
@@ -1037,10 +1041,11 @@
     document.getElementById('f-dia').value        = alumno?.horario_dia || '';
     document.getElementById('f-hora').value       = alumno?.horario_hora|| '';
     document.getElementById('f-vencimiento').value= alumno?.vencimiento || lastDayOfMonth();
-    document.getElementById('f-clases-total').value= alumno?.clases_total|| '';
-    document.getElementById('f-pass-alumno').value  = alumno?.pass_alumno  || '';
-    document.getElementById('f-notas').value        = alumno?.notas        || '';
-    document.getElementById('f-plan-clases').value  = alumno?.plan_clases  || '';
+    document.getElementById('f-clases-total').value  = alumno?.clases_total         || '';
+    document.getElementById('f-extra-clases').value  = alumno?.extra_clases_tomadas ?? 0;
+    document.getElementById('f-pass-alumno').value   = alumno?.pass_alumno           || '';
+    document.getElementById('f-notas').value         = alumno?.notas                 || '';
+    document.getElementById('f-plan-clases').value   = alumno?.plan_clases           || '';
     clearAlert('alert-alumno-form');
     openModal('modal-alumno');
   }
@@ -1076,8 +1081,9 @@
       vencimiento:  document.getElementById('f-vencimiento').value || null,
       clases_total: parseInt(document.getElementById('f-clases-total').value) || planClases(plan),
       pass_alumno:  pass,
-      notas:        document.getElementById('f-notas').value.trim(),
-      plan_clases:  document.getElementById('f-plan-clases').value.trim(),
+      notas:                 document.getElementById('f-notas').value.trim(),
+      plan_clases:           document.getElementById('f-plan-clases').value.trim(),
+      extra_clases_tomadas:  parseInt(document.getElementById('f-extra-clases').value) || 0,
     };
 
     let error;
@@ -1239,8 +1245,9 @@
           <div class="card">
             <div class="card-title" style="font-size:14px;margin-bottom:12px;">Registrar clase</div>
             <div style="display:flex;gap:10px;flex-wrap:wrap;">
-              <button class="btn btn-green" onclick="marcarClase('${a.id}', 'tomada', '')">✓ Clase tomada</button>
-              <button class="btn btn-yellow" onclick="marcarClase('${a.id}', 'tomada', 'Cancelación tardía')">⚠ Cancelación tardía</button>
+              <button class="btn btn-green" onclick="marcarClase('${a.id}', false)">✓ Clase tomada</button>
+              <button class="btn btn-yellow" onclick="marcarClase('${a.id}', true)">⚠ Cancelación tardía</button>
+              <button class="btn btn-secondary" onclick="registrarClaseIndividual('${a.id}')">➕ Clase individual</button>
             </div>
           </div>
 
@@ -1284,19 +1291,56 @@
 
   }
 
-  async function marcarClase(alumnoId, tipo, nota) {
+  async function marcarClase(alumnoId, esCancelacionTardia) {
     const { data: a } = await sb.from('alumnos').select('clases_tomadas').eq('id', alumnoId).single();
     const nuevas = (a?.clases_tomadas || 0) + 1;
 
+    // Actualizar clases_tomadas
     await sb.from('alumnos').update({ clases_tomadas: nuevas }).eq('id', alumnoId);
-    await sb.from('confirmaciones').insert({
-      alumno_id: alumnoId,
-      fecha: today(),
-      estado: 'confirmada',
-      nota: nota || null,
-    });
 
-    // Refresh
+    if (esCancelacionTardia) {
+      // Insertar cancelación tardía como nueva entrada
+      await sb.from('confirmaciones').insert({
+        alumno_id: alumnoId, fecha: today(),
+        estado: 'cancelada_tardia', nota: 'Cancelación tardía — clase cobrada',
+      });
+    } else {
+      // Buscar confirmación pendiente más reciente y marcarla como asistida
+      const { data: conf } = await sb.from('confirmaciones')
+        .select('id').eq('alumno_id', alumnoId).eq('estado', 'confirmada')
+        .order('fecha', { ascending: false }).limit(1).maybeSingle();
+
+      if (conf) {
+        await sb.from('confirmaciones').update({ estado: 'asistio' }).eq('id', conf.id);
+      } else {
+        await sb.from('confirmaciones').insert({
+          alumno_id: alumnoId, fecha: today(), estado: 'asistio', nota: null,
+        });
+      }
+    }
+
+    const { data: alumno } = await sb.from('alumnos').select('*').eq('id', alumnoId).single();
+    if (alumno) adminVerAlumno(alumno);
+  }
+
+  async function registrarClaseIndividual(alumnoId) {
+    const monto = prompt('Monto cobrado por la clase individual (COP):');
+    if (monto === null) return;
+
+    const { data: a } = await sb.from('alumnos').select('extra_clases_tomadas').eq('id', alumnoId).single();
+    const extra = (a?.extra_clases_tomadas || 0) + 1;
+
+    await sb.from('alumnos').update({ extra_clases_tomadas: extra }).eq('id', alumnoId);
+    await sb.from('confirmaciones').insert({
+      alumno_id: alumnoId, fecha: today(), estado: 'individual', nota: 'Clase individual',
+    });
+    if (monto && Number(monto) > 0) {
+      await sb.from('pagos').insert({
+        alumno_id: alumnoId, fecha: today(), monto: Number(monto),
+        plan: 'individual', notas: 'Clase individual',
+      });
+    }
+
     const { data: alumno } = await sb.from('alumnos').select('*').eq('id', alumnoId).single();
     if (alumno) adminVerAlumno(alumno);
   }
@@ -1404,6 +1448,10 @@
     const { data: yaConf } = await sb.from('confirmaciones')
       .select('estado').eq('alumno_id', a.id).eq('fecha', fechaManana).maybeSingle();
 
+    // Check if today's class was completed
+    const { data: hoyAsistio } = await sb.from('confirmaciones')
+      .select('estado').eq('alumno_id', a.id).eq('fecha', today()).eq('estado', 'asistio').maybeSingle();
+
     // Confirmaciones recientes (historial)
     const { data: histConfs } = await sb.from('confirmaciones').select('*')
       .eq('alumno_id', a.id).order('fecha', { ascending: false }).limit(5);
@@ -1446,13 +1494,19 @@
     ).join('') || '<p style="color:#888;font-size:13px;">Sin pagos.</p>';
 
     // Confirmar clase HTML
-    const confirmHtml = yaConf
-      ? `<div class="alert alert-success">✅ Ya confirmaste para mañana (${fmtDate(fechaManana)}): <strong>${yaConf.estado}</strong></div>`
-      : `<div style="display:flex;gap:10px;flex-wrap:wrap;">
-           <button class="btn btn-green" onclick="confirmarClase('confirmada')">✓ Confirmar asistencia</button>
-           <button class="btn btn-yellow" onclick="confirmarClase('aplazada')">⚠ Aplazar clase</button>
-         </div>
-         <div id="alert-confirmacion" style="margin-top:12px;"></div>`;
+    let confirmHtml;
+    if (hoyAsistio) {
+      confirmHtml = `<div class="alert alert-success" style="font-size:15px;">🏆 ¡Clase de hoy completada! Sigue así.</div>`;
+    } else if (yaConf) {
+      const estadoLabel = yaConf.estado === 'confirmada' ? '✅ Asistencia confirmada' : '⚠️ Clase aplazada';
+      confirmHtml = `<div class="alert alert-success">${estadoLabel} para mañana <strong>(${fmtDate(fechaManana)})</strong></div>`;
+    } else {
+      confirmHtml = `<div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-green" onclick="confirmarClase('confirmada')">✓ Confirmar asistencia</button>
+        <button class="btn btn-yellow" onclick="confirmarClase('aplazada')">⚠ Aplazar clase</button>
+      </div>
+      <div id="alert-confirmacion" style="margin-top:12px;"></div>`;
+    }
 
     content.innerHTML = `
       <div style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap;">
@@ -1586,18 +1640,17 @@
   /* buildMiPlan — panel alumno, usa plan_clases */
   function buildMiPlan(a) { return buildPlanClases(a, false); }
 
-  /* buildPlanClases — reutilizable en admin y alumno
-     adminMode=true → edición inline no disponible, pero misma vista */
+  /* buildPlanClases — reutilizable en admin y alumno */
   function buildPlanClases(a, adminMode) {
     const src = (a.plan_clases || '').trim();
+    const uid = adminMode ? 'admin' : 'alumno';
     if (!src) return adminMode
       ? `<div class="card" style="margin-top:16px;"><p class="text-gray" style="font-size:13px;">Sin plan de clases asignado aún.</p></div>`
       : '';
 
     const lines   = src.split('\n').map(l => l.trim()).filter(l => l);
     const tomadas = a.clases_tomadas || 0;
-    const uid     = adminMode ? 'admin' : 'alumno'; // IDs únicos para evitar conflicto
-    let html = '';
+    let html = ''; let totalClases = 0;
 
     for (const line of lines) {
       const m = line.match(/^Clase\s+(\d+)\s*[—–-]?\s*(.*)/i);
@@ -1605,9 +1658,11 @@
         const num  = parseInt(m[1]), desc = m[2] || '';
         const done = tomadas >= num;
         const next = tomadas === num - 1;
-        html += `<div style="display:flex;align-items:baseline;gap:10px;padding:7px 0;border-bottom:1px solid #1a1a1a;">
-          <span style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:${done?'#444':'#cc0000'};flex-shrink:0;width:28px;line-height:1;">${num}</span>
-          <span style="font-size:13px;color:${done?'#444':next?'#fff':'#555'};font-weight:${next?700:400};text-decoration:${done?'line-through':'none'};">${done?'✅ ':next?'▶ ':''}${desc}</span>
+        totalClases = Math.max(totalClases, num);
+        const nextId = next ? `id="plan-next-${uid}"` : '';
+        html += `<div ${nextId} style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-bottom:1px solid #1a1a1a;">
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:${done?'#22c55e':next?'#cc0000':'#444'};flex-shrink:0;width:28px;line-height:1;">${num}</span>
+          <span style="font-size:13px;color:${done?'#22c55e':next?'#fff':'#555'};font-weight:${next?700:400};text-decoration:${done?'line-through':'none'};">${done?'✅ ':next?'▶ ':''}${desc}</span>
         </div>`; continue;
       }
       if (line.endsWith(':') || (line === line.toUpperCase() && line.length > 3)) {
@@ -1616,11 +1671,24 @@
       html += `<p style="color:#888;font-size:13px;margin:4px 0;">${line}</p>`;
     }
 
-    const title = adminMode ? 'PLAN DE ENTRENAMIENTO' : 'MI PLAN DE ENTRENAMIENTO';
+    const titleBase = adminMode ? 'PLAN DE ENTRENAMIENTO' : 'MI PLAN DE ENTRENAMIENTO';
+    const countTag  = totalClases > 0
+      ? `<span style="font-size:11px;color:#888;font-family:'Inter',sans-serif;font-weight:400;margin-left:8px;">${tomadas}/${totalClases} completadas</span>`
+      : '';
+
+    const onOpen = `(function(){
+      const b=document.getElementById('plan-body-${uid}');
+      const ar=document.getElementById('plan-arrow-${uid}');
+      const o=b.style.display!=='none';
+      b.style.display=o?'none':'block';
+      ar.textContent=o?'▼':'▲';
+      if(!o){const nx=document.getElementById('plan-next-${uid}');if(nx)setTimeout(()=>nx.scrollIntoView({behavior:'smooth',block:'center'}),120);}
+    })()`;
+
     return `<div style="border-radius:6px;overflow:hidden;border:1px solid #222;border-top:3px solid #cc0000;${adminMode?'margin-top:16px;':''}">
-      <button onclick="(function(){const b=document.getElementById('plan-body-${uid}'),ar=document.getElementById('plan-arrow-${uid}'),o=b.style.display!=='none';b.style.display=o?'none':'block';ar.textContent=o?'▼':'▲';})()"
+      <button onclick="${onOpen}"
         style="width:100%;background:#111;border:none;color:#fff;font-family:'Oswald',sans-serif;font-size:15px;letter-spacing:2px;text-transform:uppercase;padding:16px 20px;text-align:left;cursor:pointer;display:flex;justify-content:space-between;align-items:center;">
-        ${title}
+        <span>${titleBase}${countTag}</span>
         <span id="plan-arrow-${uid}" style="color:#cc0000;font-size:12px;">▼</span>
       </button>
       <div id="plan-body-${uid}" style="display:none;background:#111;padding:16px 20px;">${html}</div>
