@@ -563,7 +563,7 @@ async function buildDetallePeril(a){
       <div class="avatar-wrap">
         <div class="avatar-circle">${av}</div>
         <label for="foto-adm" class="avatar-cam">📷</label>
-        <input type="file" id="foto-adm" accept="image/*" capture="environment" style="display:none" onchange="subirFotoAdmin(this,'${a.id}')">
+        <input type="file" id="foto-adm" accept="image/*" style="display:none" onchange="subirFotoAdmin(this,'${a.id}')">
       </div>
       <div id="foto-adm-msg" style="font-size:12px;min-height:14px;margin-bottom:6px;"></div>
       <div style="font-family:var(--ft);font-size:20px;font-weight:700;">${a.nombre}</div>
@@ -1092,7 +1092,7 @@ async function renderAlumnoPerfil(){
       <div class="avatar-wrap">
         <div class="avatar-circle">${av}</div>
         <label for="foto-alm" class="avatar-cam">📷</label>
-        <input type="file" id="foto-alm" accept="image/*" capture="environment" style="display:none;" onchange="subirFoto(this)">
+        <input type="file" id="foto-alm" accept="image/*" style="display:none;" onchange="subirFoto(this)">
       </div>
       <div id="foto-alm-msg" style="font-size:12px;min-height:14px;margin-bottom:6px;"></div>
       <div style="font-family:var(--ft);font-size:20px;font-weight:700;">${a.nombre}</div>
