@@ -278,6 +278,26 @@
     .mt-8{margin-top:8px} .mt-12{margin-top:12px} .mt-16{margin-top:16px}
     .mb-8{margin-bottom:8px} .mb-12{margin-bottom:12px} .mb-16{margin-bottom:16px}
     .flex{display:flex} .gap-8{gap:8px} .gap-12{gap:12px} .flex-wrap{flex-wrap:wrap}
+    /* ── LIGHTBOX ── */
+    #lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:3000;align-items:center;justify-content:center;cursor:zoom-out;}
+    #lightbox.open{display:flex;}
+    #lightbox img{max-width:90vw;max-height:90vh;object-fit:contain;border-radius:4px;cursor:default;}
+    #lb-close{position:absolute;top:16px;right:20px;background:transparent;border:none;color:#fff;font-size:32px;cursor:pointer;line-height:1;z-index:10;}
+
+    /* ── EDIT MODALS ── */
+    .edit-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:2500;align-items:center;justify-content:center;padding:16px;}
+    .edit-modal-overlay.open{display:flex;}
+    .edit-modal-box{background:#111;border:1px solid #333;border-top:3px solid var(--red);border-radius:8px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;padding:24px;position:relative;}
+    @media(max-width:480px){.edit-modal-box{max-width:95vw;padding:18px;}}
+    .em-title{font-family:var(--ft);font-size:18px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#fff;margin-bottom:18px;}
+    .em-close{position:absolute;top:14px;right:16px;background:transparent;border:none;color:var(--gray);font-size:20px;cursor:pointer;}
+    .em-close:hover{color:#fff;}
+    .em-group{margin-bottom:12px;}
+    .em-group label{display:block;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--gray);margin-bottom:4px;}
+    .em-group input,.em-group select,.em-group textarea{width:100%;background:#1a1a1a;border:1px solid #333;color:#fff;padding:9px 12px;border-radius:4px;font-size:14px;font-family:var(--fb);}
+    .em-group input:focus,.em-group select:focus,.em-group textarea:focus{outline:none;border-color:var(--red);}
+    .em-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .em-btns{display:flex;gap:8px;margin-top:14px;}
   </style>
 </head>
 <body>
@@ -338,6 +358,105 @@
 <div id="app">
   <div id="tab-bar"></div>
   <div id="tab-content"></div>
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="if(event.target===this)closeLightbox()">
+  <button id="lb-close" onclick="closeLightbox()">✕</button>
+  <img id="lb-img" src="" alt="Foto">
+</div>
+
+<!-- MODAL EDITAR CLASE INDIVIDUAL -->
+<div class="edit-modal-overlay" id="modal-ei">
+  <div class="edit-modal-box">
+    <button class="em-close" onclick="closeEM('modal-ei')">✕</button>
+    <div class="em-title">Editar clase individual</div>
+    <input type="hidden" id="ei-id">
+    <input type="hidden" id="ei-aid">
+    <div class="em-row">
+      <div class="em-group"><label>Fecha</label><input type="date" id="ei-fecha"></div>
+      <div class="em-group"><label>Hora</label><input type="time" id="ei-hora"></div>
+    </div>
+    <div class="em-row">
+      <div class="em-group"><label>Disciplina</label><input type="text" id="ei-disc" placeholder="Jiu Jitsu..."></div>
+      <div class="em-group"><label>Monto (COP)</label><input type="number" id="ei-monto"></div>
+    </div>
+    <div class="em-group"><label>Notas</label><input type="text" id="ei-notas" placeholder="Opcional"></div>
+    <div class="em-group"><label>Estado de pago</label>
+      <select id="ei-estado" onchange="toggleEIMetodo()">
+        <option value="pendiente">Pendiente</option>
+        <option value="pagado">Pagado</option>
+      </select>
+    </div>
+    <div class="em-group" id="ei-metodo-wrap" style="display:none;">
+      <label>Método de pago</label>
+      <select id="ei-metodo">
+        <option>Efectivo</option><option>Nequi</option>
+        <option>Transferencia</option><option>PayPal</option>
+      </select>
+    </div>
+    <div class="em-btns">
+      <button class="btn btn-primary" onclick="saveEditClaseInd()">Guardar cambios</button>
+      <button class="btn btn-secondary" onclick="closeEM('modal-ei')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDITAR PAGO -->
+<div class="edit-modal-overlay" id="modal-ep">
+  <div class="edit-modal-box">
+    <button class="em-close" onclick="closeEM('modal-ep')">✕</button>
+    <div class="em-title">Editar pago</div>
+    <input type="hidden" id="ep-id">
+    <input type="hidden" id="ep-aid">
+    <div class="em-row">
+      <div class="em-group"><label>Fecha</label><input type="date" id="ep-fecha"></div>
+      <div class="em-group"><label>Monto (COP)</label><input type="number" id="ep-monto"></div>
+    </div>
+    <div class="em-group"><label>Plan</label>
+      <select id="ep-plan">
+        <option value="10_clases">10 Clases</option>
+        <option value="15_clases">15 Clases</option>
+        <option value="individual">Individual</option>
+      </select>
+    </div>
+    <div class="em-group"><label>Método de pago</label>
+      <select id="ep-metodo">
+        <option value="">Sin especificar</option>
+        <option>Efectivo</option><option>Nequi</option>
+        <option>Transferencia</option><option>PayPal</option>
+      </select>
+    </div>
+    <div class="em-group"><label>Notas</label><input type="text" id="ep-notas"></div>
+    <div class="em-btns">
+      <button class="btn btn-primary" onclick="saveEditPago()">Guardar cambios</button>
+      <button class="btn btn-secondary" onclick="closeEM('modal-ep')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDITAR CONFIRMACIÓN -->
+<div class="edit-modal-overlay" id="modal-ec">
+  <div class="edit-modal-box">
+    <button class="em-close" onclick="closeEM('modal-ec')">✕</button>
+    <div class="em-title">Editar confirmación</div>
+    <input type="hidden" id="ec-id">
+    <input type="hidden" id="ec-aid">
+    <div class="em-group"><label>Fecha</label><input type="date" id="ec-fecha"></div>
+    <div class="em-group"><label>Estado</label>
+      <select id="ec-estado">
+        <option value="confirmada">Confirmada</option>
+        <option value="aplazada">Aplazada</option>
+        <option value="cancelada_tardia">Cancelación tardía</option>
+        <option value="asistio">Asistió</option>
+      </select>
+    </div>
+    <div class="em-group"><label>Nota</label><input type="text" id="ec-nota" placeholder="Opcional"></div>
+    <div class="em-btns">
+      <button class="btn btn-primary" onclick="saveEditConf()">Guardar cambios</button>
+      <button class="btn btn-secondary" onclick="closeEM('modal-ec')">Cancelar</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -561,7 +680,7 @@ async function buildDetallePeril(a){
   return `
     <div class="card" style="text-align:center;">
       <div class="avatar-wrap">
-        <div class="avatar-circle">${av}</div>
+        <div class="avatar-circle" onclick="if(this.querySelector('img'))showLightbox(this.querySelector('img').src)" style="cursor:${`${av}`.includes('<img')?'zoom-in':'default'}">${av}</div>
         <label for="foto-adm" class="avatar-cam">📷</label>
         <input type="file" id="foto-adm" accept="image/*" style="display:none" onchange="subirFotoAdmin(this,'${a.id}')">
       </div>
@@ -757,15 +876,18 @@ async function buildDetalleClases(a){
   const innerBar=`<div class="filter-tabs" style="margin-bottom:14px;">${innerTabs.map(t=>`
     <button class="filter-tab ${clasesInnerTab===t.id?'active':''}" onclick="clasesInnerTab='${t.id}';_adminClasesRender('${a.id}')">${t.label}</button>`).join('')}</div>`;
 
-  // Render hist row helper
+  // Render hist row helper (admin: con botones editar/eliminar)
   const confRow=c=>{
     const icon=c.estado==='asistio'?'✅':c.estado==='confirmada'?'🔵':c.estado==='aplazada'?'⚠️':'❌';
     const color=c.estado==='asistio'?'var(--green)':c.estado==='aplazada'?'var(--yellow)':c.estado==='cancelada_tardia'?'var(--red)':'var(--gray)';
+    const safe=JSON.stringify({id:c.id,alumno_id:c.alumno_id,fecha:c.fecha,estado:c.estado,nota:c.nota||''}).replace(/"/g,'&quot;');
     return `<div class="hist-item">
       <span class="hist-icon">${icon}</span>
       <span style="flex:1;font-size:13px;color:${color};text-transform:capitalize;">${c.estado.replace(/_/g,' ')}</span>
       <span style="font-size:12px;color:var(--gray);">${fmtDate(c.fecha)}</span>
       ${c.nota?`<span style="font-size:11px;color:var(--gray);">— ${c.nota}</span>`:''}
+      <button onclick="editConf(JSON.parse(this.dataset.c))" data-c="${safe}" style="background:transparent;border:none;color:var(--gray);cursor:pointer;font-size:14px;padding:2px 4px;">✏️</button>
+      <button onclick="deleteConf('${c.id}','${c.alumno_id}')" style="background:transparent;border:none;color:var(--red);cursor:pointer;font-size:14px;padding:2px 4px;">🗑</button>
     </div>`;
   };
 
@@ -855,7 +977,10 @@ buildDetalleIndividual._sync=function(alumnoId,inds){
           </div>
           <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;">
             <span class="badge badge-${isPend?'yellow':'green'}">${isPend?'🟡 Pendiente':'✅ Pagado'}${!isPend&&c.metodo_pago?' · '+c.metodo_pago:''}</span>
-            <button style="background:transparent;border:none;color:var(--red);font-size:16px;cursor:pointer;" onclick="eliminarClaseInd('${c.id}','${alumnoId}')">🗑</button>
+            <div style="display:flex;gap:4px;">
+              <button style="background:transparent;border:none;color:var(--gray);font-size:15px;cursor:pointer;" onclick="editClaseInd(${JSON.stringify(c).replace(/"/g,'&quot;')})">✏️</button>
+              <button style="background:transparent;border:none;color:var(--red);font-size:15px;cursor:pointer;" onclick="eliminarClaseInd('${c.id}','${alumnoId}')">🗑</button>
+            </div>
           </div>
         </div>
         ${isPend?`
@@ -880,11 +1005,15 @@ buildDetalleIndividual._sync=function(alumnoId,inds){
 async function buildDetallePagos(a){
   const{data:list}=await sb.from('pagos').select('*').eq('alumno_id',a.id).order('fecha',{ascending:false});
   const total=(list||[]).reduce((s,p)=>s+Number(p.monto||0),0);
-  const rows=(list||[]).map(p=>`
-    <div class="hist-item">
-      <span style="flex:1;font-size:14px;"><strong>$${Number(p.monto).toLocaleString('es-CO')}</strong> <span class="text-gray">· ${planLabel(p.plan)}</span></span>
+  const rows=(list||[]).map(p=>{
+    const safe=JSON.stringify({id:p.id,alumno_id:p.alumno_id,fecha:p.fecha,monto:p.monto,plan:p.plan,metodo_pago:p.metodo_pago||'',notas:p.notas||''}).replace(/"/g,'&quot;');
+    return `<div class="hist-item">
+      <span style="flex:1;font-size:14px;"><strong>$${Number(p.monto).toLocaleString('es-CO')}</strong> <span class="text-gray">· ${planLabel(p.plan)}${p.metodo_pago?' · '+p.metodo_pago:''}</span></span>
       <span style="font-size:12px;color:var(--gray);">${fmtDate(p.fecha)}</span>
-    </div>`).join('')||'<p class="text-gray" style="padding:16px 0;">Sin pagos registrados.</p>';
+      <button onclick="editPago(JSON.parse(this.dataset.p))" data-p="${safe}" style="background:transparent;border:none;color:var(--gray);cursor:pointer;font-size:14px;padding:2px 4px;">✏️</button>
+      <button onclick="deletePago('${p.id}','${p.alumno_id}')" style="background:transparent;border:none;color:var(--red);cursor:pointer;font-size:14px;padding:2px 4px;">🗑</button>
+    </div>`;
+  }).join('')||'<p class="text-gray" style="padding:16px 0;">Sin pagos registrados.</p>';
   return `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
       <button class="btn btn-primary btn-sm" onclick="openModalPago('${a.id}')">💰 Registrar pago</button>
@@ -1282,7 +1411,7 @@ async function renderAlumnoPerfil(){
     <div class="sec-title">Mi Perfil</div>
     <div class="card" style="text-align:center;">
       <div class="avatar-wrap">
-        <div class="avatar-circle">${av}</div>
+        <div class="avatar-circle" onclick="if(this.querySelector('img'))showLightbox(this.querySelector('img').src)" style="cursor:${`${av}`.includes('<img')?'zoom-in':'default'}">${av}</div>
         <label for="foto-alm" class="avatar-cam">📷</label>
         <input type="file" id="foto-alm" accept="image/*" style="display:none;" onchange="subirFoto(this)">
       </div>
@@ -1441,6 +1570,131 @@ function subirFotoAdmin(input,alumnoId){
 
 // Close modals on overlay click
 document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+document.querySelectorAll('.edit-modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+
+// ── LIGHTBOX ──────────────────────────────────
+function showLightbox(src){
+  document.getElementById('lb-img').src=src;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('open');
+  document.getElementById('lb-img').src='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox();});
+
+// ── EDIT MODAL HELPERS ────────────────────────
+function openEM(id){document.getElementById(id).classList.add('open');}
+function closeEM(id){document.getElementById(id).classList.remove('open');}
+
+// ── EDITAR CLASE INDIVIDUAL ───────────────────
+function editClaseInd(c){
+  if(typeof c==='string') c=JSON.parse(c);
+  document.getElementById('ei-id').value=c.id;
+  document.getElementById('ei-aid').value=c.alumno_id;
+  document.getElementById('ei-fecha').value=c.fecha||'';
+  document.getElementById('ei-hora').value=c.hora||'';
+  document.getElementById('ei-disc').value=c.disciplina||'';
+  document.getElementById('ei-monto').value=c.monto||'';
+  document.getElementById('ei-notas').value=c.notas||'';
+  document.getElementById('ei-estado').value=c.estado_pago||'pendiente';
+  document.getElementById('ei-metodo').value=c.metodo_pago||'Efectivo';
+  toggleEIMetodo();
+  openEM('modal-ei');
+}
+
+function toggleEIMetodo(){
+  const isPag=document.getElementById('ei-estado').value==='pagado';
+  document.getElementById('ei-metodo-wrap').style.display=isPag?'':'none';
+}
+
+async function saveEditClaseInd(){
+  const id=document.getElementById('ei-id').value;
+  const aid=document.getElementById('ei-aid').value;
+  const estado=document.getElementById('ei-estado').value;
+  const payload={
+    fecha: document.getElementById('ei-fecha').value,
+    hora:  document.getElementById('ei-hora').value||null,
+    disciplina: document.getElementById('ei-disc').value.trim(),
+    monto: Number(document.getElementById('ei-monto').value)||0,
+    notas: document.getElementById('ei-notas').value.trim()||null,
+    estado_pago: estado,
+    metodo_pago: estado==='pagado'?document.getElementById('ei-metodo').value:null,
+  };
+  const{error}=await sb.from('clases_individuales').update(payload).eq('id',id);
+  if(error){alert(error.message);return;}
+  closeEM('modal-ei');
+  clasesInnerTab='individual';
+  openDetalleAlumno(aid,'clases');
+}
+
+// ── EDITAR PAGO ───────────────────────────────
+function editPago(p){
+  if(typeof p==='string') p=JSON.parse(p);
+  document.getElementById('ep-id').value=p.id;
+  document.getElementById('ep-aid').value=p.alumno_id;
+  document.getElementById('ep-fecha').value=p.fecha||'';
+  document.getElementById('ep-monto').value=p.monto||'';
+  document.getElementById('ep-plan').value=p.plan||'individual';
+  document.getElementById('ep-metodo').value=p.metodo_pago||'';
+  document.getElementById('ep-notas').value=p.notas||'';
+  openEM('modal-ep');
+}
+
+async function saveEditPago(){
+  const id=document.getElementById('ep-id').value;
+  const aid=document.getElementById('ep-aid').value;
+  const payload={
+    fecha: document.getElementById('ep-fecha').value,
+    monto: Number(document.getElementById('ep-monto').value)||0,
+    plan:  document.getElementById('ep-plan').value,
+    metodo_pago: document.getElementById('ep-metodo').value||null,
+    notas: document.getElementById('ep-notas').value.trim()||null,
+  };
+  const{error}=await sb.from('pagos').update(payload).eq('id',id);
+  if(error){alert(error.message);return;}
+  closeEM('modal-ep');
+  openDetalleAlumno(aid,'pagos');
+}
+
+async function deletePago(id, aid){
+  if(!confirm('¿Eliminar este pago?')) return;
+  await sb.from('pagos').delete().eq('id',id);
+  openDetalleAlumno(aid,'pagos');
+}
+
+// ── EDITAR CONFIRMACIÓN ───────────────────────
+function editConf(c){
+  if(typeof c==='string') c=JSON.parse(c);
+  document.getElementById('ec-id').value=c.id;
+  document.getElementById('ec-aid').value=c.alumno_id;
+  document.getElementById('ec-fecha').value=c.fecha||'';
+  document.getElementById('ec-estado').value=c.estado||'confirmada';
+  document.getElementById('ec-nota').value=c.nota||'';
+  openEM('modal-ec');
+}
+
+async function saveEditConf(){
+  const id=document.getElementById('ec-id').value;
+  const aid=document.getElementById('ec-aid').value;
+  const payload={
+    fecha:  document.getElementById('ec-fecha').value,
+    estado: document.getElementById('ec-estado').value,
+    nota:   document.getElementById('ec-nota').value.trim()||null,
+  };
+  const{error}=await sb.from('confirmaciones').update(payload).eq('id',id);
+  if(error){alert(error.message);return;}
+  closeEM('modal-ec');
+  clasesInnerTab='historial';
+  openDetalleAlumno(aid,'clases');
+}
+
+async function deleteConf(id, aid){
+  if(!confirm('¿Eliminar esta confirmación?')) return;
+  await sb.from('confirmaciones').delete().eq('id',id);
+  clasesInnerTab='historial';
+  openDetalleAlumno(aid,'clases');
+}
 </script>
 </body>
 </html>
